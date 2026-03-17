@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sa-bg: #f4f7fb;
+  --sa-surface: #ffffff;
+  --sa-surface-alt: #f8fafc;
+  --sa-border: #dbe3ef;
+  --sa-text: #0f172a;
+  --sa-text-muted: #475569;
+  --sa-primary: #0f766e;
+  --sa-primary-strong: #0b5f59;
+}
+
+@layer base {
+  html {
+    font-family: 'Manrope', 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    @apply antialiased text-slate-900;
+    background: radial-gradient(circle at top right, #e6f7f6 0%, #f4f7fb 48%, #eef3fb 100%);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+    background: linear-gradient(135deg, var(--sa-primary) 0%, #0ea5a1 100%);
+    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.2);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--sa-primary-strong) 0%, #0f766e 100%);
+    transform: translateY(-1px);
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-slate-700 bg-white border rounded-xl hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+    border-color: var(--sa-border);
+  }
+  
+  .input {
+    @apply block w-full px-3.5 py-2.5 border rounded-xl shadow-sm placeholder-slate-400 focus:outline-none sm:text-sm transition-all duration-200;
+    border-color: var(--sa-border);
+  }
+
+  .input:focus {
+    border-color: var(--sa-primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18);
+  }
+  
+  .card {
+    @apply rounded-2xl border shadow-sm;
+    background-color: var(--sa-surface);
+    border-color: var(--sa-border);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+  }
+  
+  /* Animation for notifications */
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+  }
+
+  .page-fade-in {
+    animation: page-fade-in 0.28s ease-out;
+  }
+
+  @keyframes page-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+}
+
+/* Dark mode support */
+.dark {
+  color-scheme: dark;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  @apply outline-none ring-2 ring-offset-2;
+  --tw-ring-color: rgba(15, 118, 110, 0.45);
+}
+
+/* Form elements in dark mode */
+.dark input, 
+.dark select, 
+.dark textarea {
+  @apply bg-slate-700 border-slate-600 text-white placeholder-slate-400;
+}
+
+.dark .card {
+  @apply bg-slate-800 border-slate-700;
+}
+
+/* Table styles */
+table {
+  @apply w-full;
+}
+
+th {
+  @apply text-left text-xs font-medium text-slate-500 uppercase tracking-wider;
+}
+
+td {
+  @apply whitespace-nowrap text-sm;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.badge-error {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-info {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Indian number format helper */
+.inr::before {
+  content: "₹";
+}
