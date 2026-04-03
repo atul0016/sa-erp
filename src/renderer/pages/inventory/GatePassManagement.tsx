@@ -52,70 +52,15 @@ export default function GatePassManagement() {
   const [showReturnModal, setShowReturnModal] = useState(false);
 
   useEffect(() => {
-    // Mock gate pass data
-    setGatePasses([
-      {
-        id: '1',
-        gate_pass_number: 'GP-RGP-2024-001',
-        type: 'RGP',
-        direction: 'outward',
-        party_name: 'ABC Machine Works',
-        purpose: 'Repair & Maintenance',
-        vehicle_number: 'MH12AB1234',
-        driver_name: 'Raju Kumar',
-        expected_return: '2024-01-20',
-        status: 'dispatched',
-        created_at: '2024-01-15',
-        items: [
-          { id: '1', item_name: 'CNC Spindle Motor', item_code: 'MACH-001', uom: 'Nos', outward_qty: 2, returned_qty: 0, pending_qty: 2 },
-          { id: '2', item_name: 'Bearing Assembly', item_code: 'BEAR-005', uom: 'Nos', outward_qty: 4, returned_qty: 0, pending_qty: 4 },
-        ],
-      },
-      {
-        id: '2',
-        gate_pass_number: 'GP-RGP-2024-002',
-        type: 'RGP',
-        direction: 'outward',
-        party_name: 'XYZ Calibration Lab',
-        purpose: 'Calibration',
-        vehicle_number: 'MH14CD5678',
-        expected_return: '2024-01-25',
-        status: 'partial_return',
-        created_at: '2024-01-12',
-        items: [
-          { id: '3', item_name: 'Digital Micrometer', item_code: 'TOOL-010', uom: 'Nos', outward_qty: 5, returned_qty: 3, pending_qty: 2 },
-          { id: '4', item_name: 'Pressure Gauge', item_code: 'INST-008', uom: 'Nos', outward_qty: 3, returned_qty: 3, pending_qty: 0 },
-        ],
-      },
-      {
-        id: '3',
-        gate_pass_number: 'GP-NRGP-2024-001',
-        type: 'NRGP',
-        direction: 'outward',
-        party_name: 'Vendor Sample Return',
-        purpose: 'Sample Return',
-        vehicle_number: 'MH01EF9012',
-        status: 'closed',
-        created_at: '2024-01-10',
-        items: [
-          { id: '5', item_name: 'Raw Material Sample', item_code: 'RM-SAMPLE', uom: 'Kg', outward_qty: 10, returned_qty: 0, pending_qty: 0 },
-        ],
-      },
-      {
-        id: '4',
-        gate_pass_number: 'GP-RGP-2024-003',
-        type: 'RGP',
-        direction: 'outward',
-        party_name: 'Job Work - Surface Treatment',
-        purpose: 'Job Work',
-        expected_return: '2024-01-08',
-        status: 'overdue',
-        created_at: '2024-01-02',
-        items: [
-          { id: '6', item_name: 'Steel Shaft', item_code: 'COMP-015', uom: 'Nos', outward_qty: 50, returned_qty: 0, pending_qty: 50 },
-        ],
-      },
-    ]);
+    const loadGatePasses = async () => {
+      try {
+        const result = await (window as any).electronAPI.inventory.getGatePasses();
+        if (result?.success) setGatePasses(result.data);
+      } catch (error) {
+        console.error('Failed to load gate passes:', error);
+      }
+    };
+    loadGatePasses();
   }, []);
 
   const formatDate = (dateStr: string) => {
@@ -188,7 +133,7 @@ export default function GatePassManagement() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4">
           <p className="text-sm text-gray-500">Total Passes</p>
           <p className="text-2xl font-bold text-gray-800">{stats.total}</p>

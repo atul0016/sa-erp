@@ -37,14 +37,8 @@ export function EInvoice() {
 
   const loadEInvoices = async () => {
     try {
-      // Mock data
-      setInvoices([
-        { id: 1, invoice_number: 'INV-2024-0001', invoice_date: '2024-01-15', customer_name: 'ABC Industries Pvt Ltd', customer_gstin: '27AABCU9603R1ZM', irn: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4', ack_number: 'ACK123456789', ack_date: '2024-01-15', status: 'generated', total: 118000, error_message: null },
-        { id: 2, invoice_number: 'INV-2024-0002', invoice_date: '2024-01-18', customer_name: 'XYZ Manufacturing Co', customer_gstin: '27AADCX9999R1ZN', irn: 'b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5', ack_number: 'ACK234567890', ack_date: '2024-01-18', status: 'generated', total: 88500, error_message: null },
-        { id: 3, invoice_number: 'INV-2024-0003', invoice_date: '2024-01-20', customer_name: 'Global Trade Exports', customer_gstin: '07AABCG1234R1ZP', irn: 'c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5j6', ack_number: 'ACK345678901', ack_date: '2024-01-20', status: 'generated', total: 177000, error_message: null },
-        { id: 4, invoice_number: 'INV-2024-0004', invoice_date: '2024-01-22', customer_name: 'South Star Industries', customer_gstin: '33AABCS5678R1ZQ', irn: null, ack_number: null, ack_date: null, status: 'pending', total: 53100, error_message: null },
-        { id: 5, invoice_number: 'INV-2024-0005', invoice_date: '2024-01-23', customer_name: 'North Enterprises', customer_gstin: '06AABCN1234R1ZS', irn: null, ack_number: null, ack_date: null, status: 'failed', total: 75000, error_message: 'Invalid GSTIN format' },
-      ]);
+      const result = await (window as any).electronAPI.gst.getEInvoices();
+      if (result?.success) setInvoices(result.data);
     } catch (error) {
       notify('error', 'Failed to load e-invoices');
     } finally {

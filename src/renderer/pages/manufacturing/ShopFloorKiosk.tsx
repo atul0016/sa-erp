@@ -63,58 +63,44 @@ export default function ShopFloorKiosk() {
     return () => clearInterval(timer);
   }, []);
 
-  // Mock data for demo
+  // Load work centers from API
   useEffect(() => {
-    setWorkCenters([
-      { id: '1', code: 'WC-CNC-01', name: 'CNC Machine 1' },
-      { id: '2', code: 'WC-CNC-02', name: 'CNC Machine 2' },
-      { id: '3', code: 'WC-LATHE-01', name: 'Lathe Machine 1' },
-      { id: '4', code: 'WC-MILL-01', name: 'Milling Machine 1' },
-    ]);
+    const loadWorkCenters = async () => {
+      try {
+        const result = await (window as any).electronAPI.manufacturing.getWorkCenters();
+        if (result?.success) setWorkCenters(result.data);
+      } catch (error) {
+        console.error('Failed to load work centers:', error);
+      }
+    };
+    loadWorkCenters();
   }, []);
 
   useEffect(() => {
     if (selectedWorkCenter) {
-      // Load job cards for work center
-      setJobCards([
-        {
-          id: '1',
-          job_card_number: 'JC-2024-001',
-          production_order_number: 'PO-2024-0125',
-          work_center_name: 'CNC Machine 1',
-          operation_name: 'Rough Machining',
-          planned_qty: 100,
-          completed_qty: 45,
-          rejected_qty: 2,
-          status: 'started',
-          planned_start: '2024-01-15T08:00:00',
-          actual_start: '2024-01-15T08:15:00',
-        },
-        {
-          id: '2',
-          job_card_number: 'JC-2024-002',
-          production_order_number: 'PO-2024-0126',
-          work_center_name: 'CNC Machine 1',
-          operation_name: 'Finish Machining',
-          planned_qty: 50,
-          completed_qty: 0,
-          rejected_qty: 0,
-          status: 'pending',
-          planned_start: '2024-01-15T14:00:00',
-        },
-        {
-          id: '3',
-          job_card_number: 'JC-2024-003',
-          production_order_number: 'PO-2024-0127',
-          work_center_name: 'CNC Machine 1',
-          operation_name: 'Threading',
-          planned_qty: 200,
-          completed_qty: 0,
-          rejected_qty: 0,
-          status: 'pending',
-          planned_start: '2024-01-16T08:00:00',
-        },
-      ]);
+      const loadShopFloorData = async () => {
+        try {
+          const result = await (window as any).electronAPI.manufacturing.getShopFloorData();
+          if (result?.success) {
+            setJobCards((result.data.activeJobs || []).map((j: any) => ({
+              ...j,
+              job_card_number: j.id,
+              production_order_number: j.production_order,
+              work_center_name: j.work_center,
+              operation_name: j.operation,
+              planned_qty: j.target_qty,
+              completed_qty: j.completed_qty,
+              rejected_qty: j.rejected_qty,
+              status: j.status === 'in_progress' ? 'started' : j.status,
+              planned_start: j.start_time || j.expected_start,
+              actual_start: j.start_time,
+            })));
+          }
+        } catch (error) {
+          console.error('Failed to load shop floor data:', error);
+        }
+      };
+      loadShopFloorData();
     }
   }, [selectedWorkCenter]);
 

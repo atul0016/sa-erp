@@ -12,11 +12,7 @@ import { useApp } from '../../context';
 
 declare global {
   interface Window {
-    api: {
-      finance: {
-        getJournalEntries: (tenantId: string) => Promise<{ success: boolean; data?: any[]; error?: string }>;
-      };
-    };
+    electronAPI: any;
   }
 }
 
@@ -56,59 +52,13 @@ export function JournalEntries() {
     
     setLoading(true);
     
-    // Mock data for development
-    const mockEntries = [
-        {
-          id: 1,
-          entry_number: 'JV-2024-0001',
-          date: '2024-01-15',
-          reference: 'INV-001',
-          narration: 'Sales invoice to ABC Corp',
-          total_debit: 118000,
-          total_credit: 118000,
-          status: 'posted',
-          lines: [
-            { account_code: '1120', account_name: 'Accounts Receivable', debit: 118000, credit: 0 },
-            { account_code: '4100', account_name: 'Sales Revenue', debit: 0, credit: 100000 },
-            { account_code: '2121', account_name: 'CGST Payable', debit: 0, credit: 9000 },
-            { account_code: '2122', account_name: 'SGST Payable', debit: 0, credit: 9000 },
-          ]
-        },
-        {
-          id: 2,
-          entry_number: 'JV-2024-0002',
-          date: '2024-01-16',
-          reference: 'PO-001',
-          narration: 'Purchase from XYZ Suppliers',
-          total_debit: 59000,
-          total_credit: 59000,
-          status: 'posted',
-          lines: [
-            { account_code: '5100', account_name: 'Purchases', debit: 50000, credit: 0 },
-            { account_code: '1141', account_name: 'CGST Receivable', debit: 4500, credit: 0 },
-            { account_code: '1142', account_name: 'SGST Receivable', debit: 4500, credit: 0 },
-            { account_code: '2110', account_name: 'Accounts Payable', debit: 0, credit: 59000 },
-          ]
-        },
-        {
-          id: 3,
-          entry_number: 'JV-2024-0003',
-          date: '2024-01-17',
-          reference: 'SAL-JAN',
-          narration: 'Salary payment for January 2024',
-          total_debit: 500000,
-          total_credit: 500000,
-          status: 'draft',
-          lines: [
-            { account_code: '5200', account_name: 'Salary Expense', debit: 500000, credit: 0 },
-            { account_code: '1110', account_name: 'Bank Account', debit: 0, credit: 500000 },
-          ]
-        },
-      ];
-    
     try {
-      // Use mock data for now
-      setEntries(mockEntries);
+      const result = await window.electronAPI.finance.getJournalEntries(state.user.tenant_id);
+      if (result.success && result.data) {
+        setEntries(result.data);
+      } else {
+        notify('error', result.error || 'Failed to load journal entries');
+      }
     } catch (error) {
       notify('error', 'Failed to load journal entries');
     } finally {

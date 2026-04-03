@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+release/
+*.asar
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Credentials - never publish
+CREDENTIALS.md
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Local Netlify / Vercel
+.netlify
+.vercel
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Copyrighted material
+*.pdf

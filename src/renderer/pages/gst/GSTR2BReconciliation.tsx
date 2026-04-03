@@ -215,7 +215,7 @@ export default function GSTR2BReconciliation() {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <div className="bg-white rounded-xl shadow-sm border p-4">
             <p className="text-sm text-gray-500">GSTR-2B Invoices</p>
             <p className="text-2xl font-bold text-gray-800">{summary.total_gstr2b}</p>

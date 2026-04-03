@@ -12,11 +12,7 @@ import { useApp } from '../../context';
 
 declare global {
   interface Window {
-    api: {
-      finance: {
-        getTrialBalance: (tenantId: string, asOnDate: string) => Promise<{ success: boolean; data?: any[]; error?: string }>;
-      };
-    };
+    electronAPI: any;
   }
 }
 
@@ -49,66 +45,13 @@ export function TrialBalance() {
     
     setLoading(true);
     try {
-      // Mock data for development
-      const mockData: TrialBalanceEntry[] = [
-        // Assets
-        { id: 1, account_code: '1110', account_name: 'Cash', account_type: 'Asset',
-          opening_debit: 100000, opening_credit: 0, period_debit: 370000, period_credit: 596800, closing_debit: 0, closing_credit: 126800 },
-        { id: 2, account_code: '1120', account_name: 'Bank - HDFC Current', account_type: 'Asset',
-          opening_debit: 500000, opening_credit: 0, period_debit: 370000, period_credit: 596800, closing_debit: 273200, closing_credit: 0 },
-        { id: 3, account_code: '1130', account_name: 'Accounts Receivable', account_type: 'Asset',
-          opening_debit: 250000, opening_credit: 0, period_debit: 885000, period_credit: 500000, closing_debit: 635000, closing_credit: 0 },
-        { id: 4, account_code: '1140', account_name: 'Inventory', account_type: 'Asset',
-          opening_debit: 800000, opening_credit: 0, period_debit: 500000, period_credit: 450000, closing_debit: 850000, closing_credit: 0 },
-        { id: 5, account_code: '1150', account_name: 'Fixed Deposits', account_type: 'Asset',
-          opening_debit: 200000, opening_credit: 0, period_debit: 200000, period_credit: 0, closing_debit: 400000, closing_credit: 0 },
-        { id: 6, account_code: '1210', account_name: 'Plant & Machinery', account_type: 'Asset',
-          opening_debit: 1500000, opening_credit: 0, period_debit: 0, period_credit: 0, closing_debit: 1500000, closing_credit: 0 },
-        { id: 7, account_code: '1220', account_name: 'Furniture & Fixtures', account_type: 'Asset',
-          opening_debit: 150000, opening_credit: 0, period_debit: 0, period_credit: 0, closing_debit: 150000, closing_credit: 0 },
-        { id: 8, account_code: '1230', account_name: 'Accumulated Depreciation', account_type: 'Asset',
-          opening_debit: 0, opening_credit: 200000, period_debit: 0, period_credit: 25000, closing_debit: 0, closing_credit: 225000 },
-        
-        // Liabilities
-        { id: 9, account_code: '2110', account_name: 'Accounts Payable', account_type: 'Liability',
-          opening_debit: 0, opening_credit: 350000, period_debit: 250000, period_credit: 450000, closing_debit: 0, closing_credit: 550000 },
-        { id: 10, account_code: '2120', account_name: 'GST Output - CGST', account_type: 'Liability',
-          opening_debit: 0, opening_credit: 45000, period_debit: 0, period_credit: 67500, closing_debit: 0, closing_credit: 112500 },
-        { id: 11, account_code: '2121', account_name: 'GST Output - SGST', account_type: 'Liability',
-          opening_debit: 0, opening_credit: 45000, period_debit: 0, period_credit: 67500, closing_debit: 0, closing_credit: 112500 },
-        { id: 12, account_code: '2130', account_name: 'TDS Payable - 194C', account_type: 'Liability',
-          opening_debit: 0, opening_credit: 5000, period_debit: 5000, period_credit: 8000, closing_debit: 0, closing_credit: 8000 },
-        { id: 13, account_code: '2140', account_name: 'Salary Payable', account_type: 'Liability',
-          opening_debit: 0, opening_credit: 0, period_debit: 250000, period_credit: 300000, closing_debit: 0, closing_credit: 50000 },
-        
-        // Equity
-        { id: 14, account_code: '3100', account_name: 'Share Capital', account_type: 'Equity',
-          opening_debit: 0, opening_credit: 2000000, period_debit: 0, period_credit: 0, closing_debit: 0, closing_credit: 2000000 },
-        { id: 15, account_code: '3200', account_name: 'Retained Earnings', account_type: 'Equity',
-          opening_debit: 0, opening_credit: 500000, period_debit: 0, period_credit: 0, closing_debit: 0, closing_credit: 500000 },
-        
-        // Revenue
-        { id: 16, account_code: '4100', account_name: 'Sales Revenue', account_type: 'Revenue',
-          opening_debit: 0, opening_credit: 0, period_debit: 0, period_credit: 750000, closing_debit: 0, closing_credit: 750000 },
-        { id: 17, account_code: '4200', account_name: 'Service Revenue', account_type: 'Revenue',
-          opening_debit: 0, opening_credit: 0, period_debit: 0, period_credit: 150000, closing_debit: 0, closing_credit: 150000 },
-        
-        // Expenses
-        { id: 18, account_code: '5100', account_name: 'Cost of Goods Sold', account_type: 'Expense',
-          opening_debit: 0, opening_credit: 0, period_debit: 450000, period_credit: 0, closing_debit: 450000, closing_credit: 0 },
-        { id: 19, account_code: '5200', account_name: 'Salary Expense', account_type: 'Expense',
-          opening_debit: 0, opening_credit: 0, period_debit: 300000, period_credit: 0, closing_debit: 300000, closing_credit: 0 },
-        { id: 20, account_code: '5300', account_name: 'Rent Expense', account_type: 'Expense',
-          opening_debit: 0, opening_credit: 0, period_debit: 45000, period_credit: 0, closing_debit: 45000, closing_credit: 0 },
-        { id: 21, account_code: '5400', account_name: 'Utility Expense', account_type: 'Expense',
-          opening_debit: 0, opening_credit: 0, period_debit: 12000, period_credit: 0, closing_debit: 12000, closing_credit: 0 },
-        { id: 22, account_code: '5500', account_name: 'Depreciation Expense', account_type: 'Expense',
-          opening_debit: 0, opening_credit: 0, period_debit: 25000, period_credit: 0, closing_debit: 25000, closing_credit: 0 },
-        { id: 23, account_code: '5600', account_name: 'Bank Charges', account_type: 'Expense',
-          opening_debit: 0, opening_credit: 0, period_debit: 1500, period_credit: 0, closing_debit: 1500, closing_credit: 0 },
-      ];
-      
-      setEntries(showZeroBalance ? mockData : mockData.filter(e => e.closing_debit !== 0 || e.closing_credit !== 0));
+      const result = await window.electronAPI.finance.getTrialBalance(state.user.tenant_id, asOnDate);
+      if (result.success && result.data) {
+        const data: TrialBalanceEntry[] = result.data;
+        setEntries(showZeroBalance ? data : data.filter(e => e.closing_debit !== 0 || e.closing_credit !== 0));
+      } else {
+        notify('error', result.error || 'Failed to load trial balance');
+      }
     } catch (error) {
       notify('error', 'Failed to load trial balance');
     } finally {

@@ -125,6 +125,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
       } catch {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
+    } else if (window.electronAPI?.auth?.getCurrentUser) {
+      // Try to restore Appwrite session
+      window.electronAPI.auth.getCurrentUser().then((res: any) => {
+        if (res?.success && res.data) {
+          localStorage.setItem('user', JSON.stringify(res.data));
+          dispatch({ type: 'SET_USER', payload: res.data as User });
+        } else {
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
+      }).catch(() => dispatch({ type: 'SET_LOADING', payload: false }));
     } else {
       dispatch({ type: 'SET_LOADING', payload: false });
     }

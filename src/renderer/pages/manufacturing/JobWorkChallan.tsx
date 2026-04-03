@@ -70,99 +70,18 @@ export default function JobWorkChallan() {
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
-    // Mock challans data
-    setChallans([
-      {
-        id: '1',
-        challan_number: 'JW-OUT-2024-001',
-        challan_type: 'outward',
-        challan_date: '2024-01-05',
-        job_worker_name: 'Precision Machining Works',
-        job_worker_gstin: '27AABCP1234M1Z5',
-        process_name: 'CNC Machining',
-        expected_return_date: '2024-01-20',
-        days_remaining: 5,
-        status: 'dispatched',
-        total_value: 125000,
-        items: [
-          { id: '1', item_name: 'Shaft Blank', item_code: 'RM-SHAFT-001', hsn_code: '7214', uom: 'Nos', outward_qty: 100, received_qty: 0, scrap_qty: 0, pending_qty: 100, rate: 850, amount: 85000 },
-          { id: '2', item_name: 'Gear Blank', item_code: 'RM-GEAR-001', hsn_code: '7214', uom: 'Nos', outward_qty: 50, received_qty: 0, scrap_qty: 0, pending_qty: 50, rate: 800, amount: 40000 },
-        ],
-      },
-      {
-        id: '2',
-        challan_number: 'JW-OUT-2024-002',
-        challan_type: 'outward',
-        challan_date: '2024-01-02',
-        job_worker_name: 'Surface Treatment Co.',
-        job_worker_gstin: '27AABCS5678N1Z8',
-        process_name: 'Zinc Plating',
-        expected_return_date: '2024-01-12',
-        actual_return_date: '2024-01-11',
-        status: 'completed',
-        total_value: 45000,
-        items: [
-          { id: '3', item_name: 'Bolts M12', item_code: 'COMP-BOLT-012', hsn_code: '7318', uom: 'Nos', outward_qty: 500, received_qty: 495, scrap_qty: 5, pending_qty: 0, rate: 45, amount: 22500 },
-          { id: '4', item_name: 'Nuts M12', item_code: 'COMP-NUT-012', hsn_code: '7318', uom: 'Nos', outward_qty: 500, received_qty: 498, scrap_qty: 2, pending_qty: 0, rate: 45, amount: 22500 },
-        ],
-      },
-      {
-        id: '3',
-        challan_number: 'JW-OUT-2024-003',
-        challan_type: 'outward',
-        challan_date: '2023-12-15',
-        job_worker_name: 'Heat Treatment Services',
-        job_worker_gstin: '27AABCH9012P1Z2',
-        process_name: 'Hardening',
-        expected_return_date: '2024-01-05',
-        days_remaining: -10,
-        status: 'overdue',
-        total_value: 78000,
-        items: [
-          { id: '5', item_name: 'Die Steel Blocks', item_code: 'RM-DIE-001', hsn_code: '7225', uom: 'Nos', outward_qty: 20, received_qty: 12, scrap_qty: 0, pending_qty: 8, rate: 3900, amount: 78000 },
-        ],
-      },
-      {
-        id: '4',
-        challan_number: 'JW-OUT-2024-004',
-        challan_type: 'outward',
-        challan_date: '2024-01-10',
-        job_worker_name: 'Precision Machining Works',
-        job_worker_gstin: '27AABCP1234M1Z5',
-        process_name: 'Grinding',
-        expected_return_date: '2024-01-25',
-        days_remaining: 10,
-        status: 'partial_return',
-        total_value: 92000,
-        items: [
-          { id: '6', item_name: 'Valve Body', item_code: 'COMP-VALVE-001', hsn_code: '8481', uom: 'Nos', outward_qty: 40, received_qty: 25, scrap_qty: 1, pending_qty: 14, rate: 2300, amount: 92000 },
-        ],
-      },
-    ]);
-
-    // Mock ITC-04 summary
-    setItc04Summary([
-      {
-        quarter: 'Q3 FY 2023-24 (Oct-Dec)',
-        challans_sent: 45,
-        challans_received: 42,
-        pending_return: 3,
-        value_sent: 1250000,
-        value_received: 1180000,
-        due_date: '2024-01-25',
-        status: 'pending',
-      },
-      {
-        quarter: 'Q2 FY 2023-24 (Jul-Sep)',
-        challans_sent: 52,
-        challans_received: 52,
-        pending_return: 0,
-        value_sent: 1450000,
-        value_received: 1450000,
-        due_date: '2023-10-25',
-        status: 'filed',
-      },
-    ]);
+    const loadJobWorkData = async () => {
+      try {
+        const result = await (window as any).electronAPI.manufacturing.getJobWorkChallans();
+        if (result?.success) {
+          setChallans(result.data.challans || []);
+          setItc04Summary(result.data.itc04Summary ? [result.data.itc04Summary] : []);
+        }
+      } catch (error) {
+        console.error('Failed to load job work data:', error);
+      }
+    };
+    loadJobWorkData();
   }, []);
 
   const formatCurrency = (amount: number) => {
@@ -232,7 +151,7 @@ export default function JobWorkChallan() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4 cursor-pointer hover:bg-gray-50" onClick={() => setFilterStatus('all')}>
           <p className="text-sm text-gray-500">Total Challans</p>
           <p className="text-2xl font-bold text-gray-800">{stats.total}</p>

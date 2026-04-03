@@ -19,7 +19,8 @@
     "lint": "eslint src --ext .ts,.tsx",
     "test": "vitest",
     "migrate": "tsx src/main/database/migrate.ts",
-    "seed": "tsx src/main/database/seed.ts"
+    "seed": "tsx src/main/database/seed.ts",
+    "setup:appwrite": "node --env-file=.env scripts/setup-appwrite.js"
   },
   "keywords": [
     "erp",
@@ -32,11 +33,13 @@
   "author": "Enterprise Solutions",
   "license": "MIT",
   "dependencies": {
+    "appwrite": "^24.1.1",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.0.0",
     "date-fns": "^3.6.0",
     "electron-store": "^8.2.0",
     "exceljs": "^4.4.0",
+    "firebase": "^12.11.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.562.0",
@@ -64,6 +67,7 @@
     "electronmon": "^2.0.4",
     "esbuild": "^0.21.4",
     "eslint": "^8.57.0",
+    "node-appwrite": "^23.1.0",
     "postcss": "^8.4.38",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

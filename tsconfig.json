@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/renderer/*"],
+      "@components/*": ["src/renderer/components/*"],
+      "@pages/*": ["src/renderer/pages/*"],
+      "@context/*": ["src/renderer/context/*"],
+      "@types/*": ["src/renderer/types/*"],
+      "@styles/*": ["src/renderer/styles/*"]
+    }
+  },
+  "include": ["src/renderer/**/*"],
+  "references": [{ "path": "./tsconfig.main.json" }]
+}

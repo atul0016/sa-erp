@@ -75,130 +75,15 @@ export default function EWayBill() {
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
-    // Mock e-way bills data
-    setEwayBills([
-      {
-        id: '1',
-        ewb_number: '321098765432',
-        ewb_date: '2024-01-15T10:30:00',
-        valid_until: '2024-01-16T10:30:00',
-        document_type: 'invoice',
-        document_number: 'INV-2024-0125',
-        document_date: '2024-01-15',
-        supplier_gstin: '27AABCS1234M1Z5',
-        supplier_name: 'ABC Manufacturing Pvt Ltd',
-        recipient_gstin: '29AABCR5678N1Z8',
-        recipient_name: 'XYZ Industries Ltd',
-        from_place: 'Mumbai',
-        from_state: 'Maharashtra',
-        from_pincode: '400001',
-        to_place: 'Bangalore',
-        to_state: 'Karnataka',
-        to_pincode: '560001',
-        distance_km: 980,
-        transport_mode: 'road',
-        transporter_name: 'Fast Logistics',
-        transporter_id: '27AABCT9012P1Z2',
-        vehicle_number: 'MH12AB1234',
-        vehicle_type: 'Regular',
-        total_value: 285000,
-        cgst: 0,
-        sgst: 0,
-        igst: 51300,
-        status: 'active',
-        hours_remaining: 18,
-        extended_count: 0,
-      },
-      {
-        id: '2',
-        ewb_number: '321098765433',
-        ewb_date: '2024-01-14T14:00:00',
-        valid_until: '2024-01-15T14:00:00',
-        document_type: 'invoice',
-        document_number: 'INV-2024-0124',
-        document_date: '2024-01-14',
-        supplier_gstin: '27AABCS1234M1Z5',
-        supplier_name: 'ABC Manufacturing Pvt Ltd',
-        recipient_gstin: '27AABCD3456L1Z9',
-        recipient_name: 'PQR Traders',
-        from_place: 'Mumbai',
-        from_state: 'Maharashtra',
-        from_pincode: '400001',
-        to_place: 'Pune',
-        to_state: 'Maharashtra',
-        to_pincode: '411001',
-        distance_km: 150,
-        transport_mode: 'road',
-        transporter_name: 'Local Transport',
-        vehicle_number: 'MH14CD5678',
-        vehicle_type: 'Regular',
-        total_value: 125000,
-        cgst: 11250,
-        sgst: 11250,
-        igst: 0,
-        status: 'active',
-        hours_remaining: 4,
-        extended_count: 0,
-      },
-      {
-        id: '3',
-        ewb_number: '321098765430',
-        ewb_date: '2024-01-12T09:00:00',
-        valid_until: '2024-01-13T09:00:00',
-        document_type: 'delivery_challan',
-        document_number: 'DC-2024-0045',
-        document_date: '2024-01-12',
-        supplier_gstin: '27AABCS1234M1Z5',
-        supplier_name: 'ABC Manufacturing Pvt Ltd',
-        recipient_gstin: '33AABCE7890M1Z1',
-        recipient_name: 'DEF Exports',
-        from_place: 'Mumbai',
-        from_state: 'Maharashtra',
-        from_pincode: '400001',
-        to_place: 'Chennai',
-        to_state: 'Tamil Nadu',
-        to_pincode: '600001',
-        distance_km: 1350,
-        transport_mode: 'road',
-        transporter_name: 'Interstate Carriers',
-        vehicle_number: 'TN10EF9012',
-        vehicle_type: 'Over Dimensional Cargo',
-        total_value: 450000,
-        cgst: 0,
-        sgst: 0,
-        igst: 81000,
-        status: 'expired',
-        extended_count: 1,
-      },
-      {
-        id: '4',
-        ewb_number: '321098765428',
-        ewb_date: '2024-01-10T16:30:00',
-        valid_until: '2024-01-11T16:30:00',
-        document_type: 'invoice',
-        document_number: 'INV-2024-0118',
-        document_date: '2024-01-10',
-        supplier_gstin: '27AABCS1234M1Z5',
-        supplier_name: 'ABC Manufacturing Pvt Ltd',
-        recipient_gstin: '27AABCG1234N1Z5',
-        recipient_name: 'GHI Industries',
-        from_place: 'Mumbai',
-        from_state: 'Maharashtra',
-        from_pincode: '400001',
-        to_place: 'Nashik',
-        to_state: 'Maharashtra',
-        to_pincode: '422001',
-        distance_km: 180,
-        transport_mode: 'road',
-        vehicle_number: 'MH15GH3456',
-        total_value: 85000,
-        cgst: 7650,
-        sgst: 7650,
-        igst: 0,
-        status: 'cancelled',
-        extended_count: 0,
-      },
-    ]);
+    const loadEWayBills = async () => {
+      try {
+        const result = await (window as any).electronAPI.gst.getEWayBills();
+        if (result?.success) setEwayBills(result.data.bills || []);
+      } catch (error) {
+        console.error('Failed to load e-way bills:', error);
+      }
+    };
+    loadEWayBills();
   }, []);
 
   const formatCurrency = (amount: number) => {
@@ -290,7 +175,7 @@ export default function EWayBill() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-100 rounded-lg">
@@ -539,7 +424,7 @@ export default function EWayBill() {
             </div>
 
             <div className="bg-blue-50 rounded-lg p-4 mb-6">
-              <div className="grid grid-cols-4 gap-4 text-center">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div>
                   <span className="text-sm text-gray-500">Taxable Value</span>
                   <div className="font-bold text-gray-800">{formatCurrency(selectedBill.total_value)}</div>

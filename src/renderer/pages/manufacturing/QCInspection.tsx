@@ -64,154 +64,17 @@ const QCInspection: React.FC = () => {
   const [selectedInspection, setSelectedInspection] = useState<QCInspection | null>(null);
 
   useEffect(() => {
-    // Mock data
-    const mockData: QCInspection[] = [
-      {
-        id: '1',
-        inspectionNo: 'QC-2024-001',
-        inspectionDate: '2024-01-15',
-        inspectionType: 'Incoming',
-        itemCode: 'RM-001',
-        itemName: 'Mild Steel Sheets 2mm',
-        batchNo: 'BATCH-2024-156',
-        lotSize: 1500,
-        sampleSize: 50,
-        acceptedQty: 1480,
-        rejectedQty: 20,
-        reworkQty: 0,
-        status: 'Pass',
-        inspector: 'Suresh Patel',
-        duration: 45,
-        grnNo: 'GRN-2024-001',
-        poNo: 'PO-2024-045',
-        vendorName: 'Steel India Pvt Ltd',
-        parameters: [
-          { parameter: 'Thickness', specification: '2.0 ± 0.1 mm', measuredValue: '2.02 mm', result: 'Pass' },
-          { parameter: 'Width', specification: '1220 ± 5 mm', measuredValue: '1222 mm', result: 'Pass' },
-          { parameter: 'Surface Finish', specification: 'No rust, scratches', measuredValue: 'Minor scratches observed', result: 'Pass', remarks: 'Within acceptable limits' },
-          { parameter: 'Hardness', specification: '150-180 HV', measuredValue: '165 HV', result: 'Pass' },
-        ],
-        defects: [
-          { type: 'Surface Scratches', quantity: 20, severity: 'Minor', description: 'Light surface scratches on edges' },
-        ],
-        notes: 'Overall quality acceptable. Minor defects within tolerance.',
-      },
-      {
-        id: '2',
-        inspectionNo: 'QC-2024-002',
-        inspectionDate: '2024-01-18',
-        inspectionType: 'In-Process',
-        itemCode: 'WIP-045',
-        itemName: 'Welded Frame Assembly',
-        batchNo: 'WO-2024-089',
-        lotSize: 100,
-        sampleSize: 10,
-        acceptedQty: 95,
-        rejectedQty: 0,
-        reworkQty: 5,
-        status: 'Conditional Pass',
-        inspector: 'Anil Sharma',
-        duration: 60,
-        workOrder: 'WO-2024-089',
-        parameters: [
-          { parameter: 'Weld Integrity', specification: 'No cracks, porosity', measuredValue: 'Some minor porosity', result: 'Fail', remarks: 'Needs rework' },
-          { parameter: 'Dimensional Accuracy', specification: '±1 mm', measuredValue: '0.8 mm deviation', result: 'Pass' },
-          { parameter: 'Alignment', specification: 'Perpendicular ±0.5°', measuredValue: '0.3° deviation', result: 'Pass' },
-        ],
-        defects: [
-          { type: 'Weld Porosity', quantity: 5, severity: 'Major', description: 'Minor porosity in weld joints requiring rework' },
-        ],
-        notes: '5 units require weld rework. Rest of batch approved.',
-      },
-      {
-        id: '3',
-        inspectionNo: 'QC-2024-003',
-        inspectionDate: '2024-01-20',
-        inspectionType: 'Final',
-        itemCode: 'FG-001',
-        itemName: 'Industrial Cabinet Model-A',
-        batchNo: 'WO-2024-078',
-        lotSize: 50,
-        sampleSize: 5,
-        acceptedQty: 50,
-        rejectedQty: 0,
-        reworkQty: 0,
-        status: 'Pass',
-        inspector: 'Manoj Kumar',
-        duration: 90,
-        workOrder: 'WO-2024-078',
-        parameters: [
-          { parameter: 'Paint Finish', specification: 'Uniform, no drips', measuredValue: 'Excellent finish', result: 'Pass' },
-          { parameter: 'Door Alignment', specification: 'Gap ≤ 2mm', measuredValue: '1.5 mm', result: 'Pass' },
-          { parameter: 'Lock Mechanism', specification: 'Smooth operation', measuredValue: 'Working perfectly', result: 'Pass' },
-          { parameter: 'Overall Dimensions', specification: 'As per drawing', measuredValue: 'Within tolerance', result: 'Pass' },
-        ],
-        defects: [],
-        notes: 'Excellent quality. Ready for dispatch.',
-      },
-      {
-        id: '4',
-        inspectionNo: 'QC-2024-004',
-        inspectionDate: '2024-01-22',
-        inspectionType: 'Incoming',
-        itemCode: 'RM-003',
-        itemName: 'Welding Rods 3.15mm',
-        batchNo: 'BATCH-2024-234',
-        lotSize: 100,
-        sampleSize: 10,
-        acceptedQty: 0,
-        rejectedQty: 0,
-        reworkQty: 0,
-        status: 'In Progress',
-        inspector: 'Vikas Singh',
-        duration: 0,
-        grnNo: 'GRN-2024-002',
-        poNo: 'PO-2024-052',
-        vendorName: 'Welding Supplies Co',
-        parameters: [
-          { parameter: 'Diameter', specification: '3.15 ± 0.05 mm', measuredValue: 'Pending', result: 'Pass' },
-          { parameter: 'Length', specification: '350 ± 5 mm', measuredValue: 'Pending', result: 'Pass' },
-          { parameter: 'Coating', specification: 'Uniform, no cracks', measuredValue: 'Pending', result: 'Pass' },
-        ],
-        defects: [],
-        notes: 'Inspection in progress.',
-      },
-      {
-        id: '5',
-        inspectionNo: 'QC-2024-005',
-        inspectionDate: '2024-01-16',
-        inspectionType: 'Incoming',
-        itemCode: 'RM-007',
-        itemName: 'Bolts M10x50',
-        batchNo: 'BATCH-2024-145',
-        lotSize: 5000,
-        sampleSize: 100,
-        acceptedQty: 0,
-        rejectedQty: 5000,
-        reworkQty: 0,
-        status: 'Fail',
-        inspector: 'Rajesh Gupta',
-        duration: 30,
-        grnNo: 'GRN-2024-005',
-        poNo: 'PO-2024-039',
-        vendorName: 'Fasteners World',
-        parameters: [
-          { parameter: 'Thread Pitch', specification: '1.5 mm', measuredValue: '1.6 mm', result: 'Fail', remarks: 'Out of spec' },
-          { parameter: 'Length', specification: '50 ± 0.5 mm', measuredValue: '51.2 mm', result: 'Fail', remarks: 'Exceeds tolerance' },
-          { parameter: 'Material', specification: 'Grade 8.8', measuredValue: 'Grade uncertain', result: 'Fail', remarks: 'Material certification missing' },
-        ],
-        defects: [
-          { type: 'Incorrect Thread Pitch', quantity: 5000, severity: 'Critical', description: 'Thread pitch does not match specification' },
-          { type: 'Dimensional Deviation', quantity: 5000, severity: 'Critical', description: 'Length exceeds maximum tolerance' },
-        ],
-        notes: 'Entire batch rejected. Vendor to arrange return pickup.',
-      },
-    ];
-
-    setTimeout(() => {
-      setInspections(mockData);
-      setLoading(false);
-    }, 500);
+    const loadInspections = async () => {
+      try {
+        const result = await (window as any).electronAPI.manufacturing.getQCInspections();
+        if (result?.success) setInspections(result.data);
+      } catch (error) {
+        console.error('Failed to load QC inspections:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadInspections();
   }, []);
 
   const formatDate = (dateStr: string) => {
@@ -312,7 +175,7 @@ const QCInspection: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
           <div className="flex items-center gap-3">
             <ClipboardCheck className="h-8 w-8 text-blue-600" />
@@ -454,7 +317,7 @@ const QCInspection: React.FC = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               <div>
                 <p className="text-xs text-gray-500">Item</p>
                 <p className="font-medium text-gray-900">{insp.itemName}</p>

@@ -82,19 +82,7 @@ export function Warehouses() {
     }
   };
 
-  const loadMockWarehouses = () => {
-    setWarehouses([
-        { id: 1, code: 'WH-MAIN', name: 'Main Warehouse', type: 'Main', address: '123 Industrial Area', city: 'Mumbai', state: 'Maharashtra', manager: 'Rajesh Kumar', total_items: 156, total_value: 4500000, is_active: true },
-        { id: 2, code: 'WH-PUNE', name: 'Pune Branch', type: 'Branch', address: '45 MIDC Chakan', city: 'Pune', state: 'Maharashtra', manager: 'Amit Patil', total_items: 78, total_value: 1800000, is_active: true },
-        { id: 3, code: 'WH-DEL', name: 'Delhi Warehouse', type: 'Branch', address: '67 Okhla Industrial', city: 'Delhi', state: 'Delhi', manager: 'Suresh Singh', total_items: 45, total_value: 950000, is_active: true },
-        { id: 4, code: 'WH-TRANS', name: 'Transit Warehouse', type: 'Transit', address: 'Logistics Hub', city: 'Mumbai', state: 'Maharashtra', manager: 'Vijay More', total_items: 23, total_value: 320000, is_active: true },
-        { id: 5, code: 'WH-SCRAP', name: 'Scrap Yard', type: 'Scrap', address: '12 Industrial Area', city: 'Mumbai', state: 'Maharashtra', manager: 'Mahesh Jadhav', total_items: 12, total_value: 45000, is_active: true },
-      ]);
-  };
 
-  useEffect(() => {
-    loadMockWarehouses();
-  }, []);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {

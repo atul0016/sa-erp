@@ -183,7 +183,7 @@ export default function TdsManagement() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-6">
           <div className="flex items-center justify-between">
             <div>

@@ -92,117 +92,6 @@ export function PurchaseInvoices() {
     }
   };
 
-  const loadMockInvoices = () => {
-    try {
-      setInvoices([
-        {
-          id: 1,
-          invoice_number: 'PINV-2024-0001',
-          vendor_invoice_no: 'SI/2024/1234',
-          date: '2024-01-10',
-          due_date: '2024-02-09',
-          vendor_name: 'Steel India Pvt Ltd',
-          vendor_gstin: '27AABCS1234R1ZX',
-          po_number: 'PO-2024-0001',
-          grn_number: 'GRN-2024-0001',
-          subtotal: 85000,
-          cgst: 7650,
-          sgst: 7650,
-          igst: 0,
-          total: 100300,
-          paid: 100300,
-          status: 'paid',
-          tds_applicable: true,
-          tds_amount: 1700,
-        },
-        {
-          id: 2,
-          invoice_number: 'PINV-2024-0002',
-          vendor_invoice_no: 'AW/2024/5678',
-          date: '2024-01-12',
-          due_date: '2024-02-26',
-          vendor_name: 'Aluminum World',
-          vendor_gstin: '27AABCA5678R1ZY',
-          po_number: 'PO-2024-0002',
-          grn_number: 'GRN-2024-0002',
-          subtotal: 44000,
-          cgst: 3960,
-          sgst: 3960,
-          igst: 0,
-          total: 51920,
-          paid: 25000,
-          status: 'partial',
-          tds_applicable: false,
-          tds_amount: 0,
-        },
-        {
-          id: 3,
-          invoice_number: 'PINV-2024-0003',
-          vendor_invoice_no: 'CS/2024/9012',
-          date: '2024-01-15',
-          due_date: '2024-02-14',
-          vendor_name: 'Copper Solutions',
-          vendor_gstin: '33AABCC9012R1ZZ',
-          po_number: 'PO-2024-0003',
-          grn_number: 'GRN-2024-0003',
-          subtotal: 36000,
-          cgst: 0,
-          sgst: 0,
-          igst: 6480,
-          total: 42480,
-          paid: 0,
-          status: 'posted',
-          tds_applicable: true,
-          tds_amount: 720,
-        },
-        {
-          id: 4,
-          invoice_number: 'PINV-2024-0004',
-          vendor_invoice_no: 'HH/2024/3456',
-          date: '2024-01-18',
-          due_date: '2024-02-02',
-          vendor_name: 'Hardware Hub',
-          vendor_gstin: '27AABCH3456R1ZA',
-          po_number: 'PO-2024-0004',
-          grn_number: 'GRN-2024-0004',
-          subtotal: 25000,
-          cgst: 2250,
-          sgst: 2250,
-          igst: 0,
-          total: 29500,
-          paid: 0,
-          status: 'posted',
-          tds_applicable: false,
-          tds_amount: 0,
-        },
-        {
-          id: 5,
-          invoice_number: 'PINV-2024-0005',
-          vendor_invoice_no: '',
-          date: '2024-01-20',
-          due_date: '2024-02-19',
-          vendor_name: 'Steel India Pvt Ltd',
-          vendor_gstin: '27AABCS1234R1ZX',
-          po_number: 'PO-2024-0005',
-          grn_number: '',
-          subtotal: 125000,
-          cgst: 11250,
-          sgst: 11250,
-          igst: 0,
-          total: 147500,
-          paid: 0,
-          status: 'draft',
-          tds_applicable: true,
-          tds_amount: 2500,
-        },
-      ]);
-    } catch (error) {
-      notify('error', 'Failed to load invoices');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -302,7 +191,7 @@ export function PurchaseInvoices() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card className="p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">

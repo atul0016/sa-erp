@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head><title>SA ERP Logo Generator</title></head>
+<body style="margin:40px;font-family:Arial,sans-serif;">
+<h2>SA ERP Logo (256x256)</h2>
+<p>Right-click the image below and "Save image as..." to download the PNG logo.</p>
+<canvas id="c" width="256" height="256"></canvas>
+<br><br>
+<button onclick="download()">Download PNG</button>
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+
+// Background gradient
+const bgGrad = ctx.createLinearGradient(0, 0, 256, 256);
+bgGrad.addColorStop(0, '#1e40af');
+bgGrad.addColorStop(1, '#3b82f6');
+
+// Accent gradient
+const acGrad = ctx.createLinearGradient(0, 0, 256, 256);
+acGrad.addColorStop(0, '#f59e0b');
+acGrad.addColorStop(1, '#f97316');
+
+// Rounded rect helper
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// Main background
+roundRect(8, 8, 240, 240, 40);
+ctx.fillStyle = bgGrad;
+ctx.fill();
+
+// Border
+roundRect(8, 8, 240, 240, 40);
+ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+ctx.lineWidth = 2;
+ctx.stroke();
+
+// Module blocks
+const blocks = [
+  [36, 36, 38, 38, 'rgba(255,255,255,0.2)'],
+  [80, 36, 38, 38, 'rgba(255,255,255,0.15)'],
+  [36, 80, 38, 38, 'rgba(255,255,255,0.12)'],
+  [80, 80, 38, 38, 'rgba(255,255,255,0.08)'],
+];
+blocks.forEach(([x,y,w,h,color]) => {
+  roundRect(x, y, w, h, 8);
+  ctx.fillStyle = color;
+  ctx.fill();
+});
+
+// Accent bars
+roundRect(138, 36, 82, 6, 3);
+ctx.fillStyle = acGrad;
+ctx.fill();
+
+roundRect(138, 50, 58, 4, 2);
+ctx.fillStyle = 'rgba(255,255,255,0.25)';
+ctx.fill();
+
+roundRect(138, 62, 70, 4, 2);
+ctx.fillStyle = 'rgba(255,255,255,0.15)';
+ctx.fill();
+
+// Growth arrow
+ctx.beginPath();
+ctx.moveTo(172, 108);
+ctx.lineTo(184, 88);
+ctx.lineTo(196, 108);
+ctx.closePath();
+ctx.fillStyle = acGrad;
+ctx.fill();
+
+roundRect(181, 105, 6, 16, 2);
+ctx.fillStyle = acGrad;
+ctx.fill();
+
+// "SA" text
+ctx.font = '800 72px "Segoe UI", Arial, Helvetica, sans-serif';
+ctx.fillStyle = 'white';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'alphabetic';
+ctx.fillText('SA', 128, 178);
+
+// "ERP" text
+ctx.font = '600 32px "Segoe UI", Arial, Helvetica, sans-serif';
+ctx.fillStyle = 'rgba(255,255,255,0.85)';
+ctx.letterSpacing = '8px';
+ctx.fillText('ERP', 128, 218);
+
+// Bottom accent line
+roundRect(78, 228, 100, 3, 1.5);
+ctx.fillStyle = acGrad;
+ctx.fill();
+
+function download() {
+  const link = document.createElement('a');
+  link.download = 'sa-erp-logo-256x256.png';
+  link.href = c.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>

@@ -229,7 +229,7 @@ const GoodsReceiptNote: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
           <div className="flex items-center gap-3">
             <Package className="h-8 w-8 text-blue-600" />
@@ -417,7 +417,7 @@ const GoodsReceiptNote: React.FC = () => {
                       <td colSpan={7} className="bg-gray-50 p-4">
                         <div className="space-y-4">
                           {/* GRN Details */}
-                          <div className="grid grid-cols-4 gap-4 text-sm">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                             <div>
                               <span className="text-gray-500">Invoice No:</span>{' '}
                               <span className="font-medium">{grn.invoiceNo}</span>

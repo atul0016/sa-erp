@@ -91,138 +91,6 @@ const Payroll: React.FC = () => {
     }
   };
 
-  const loadMockPayrolls = () => {
-    try {
-      const mockPayrolls: Payroll[] = [
-        {
-          id: 1,
-          payroll_period: '2025-04',
-          employee_code: 'EMP001',
-          employee_name: 'Rajesh Kumar',
-          department: 'Production',
-          designation: 'Production Manager',
-          basic_salary: 40000,
-          hra: 16000,
-          other_allowances: 4000,
-          gross_salary: 60000,
-          pf_employee: 4800,
-          pf_employer: 4800,
-          esic_employee: 450,
-          esic_employer: 1950,
-          professional_tax: 200,
-          tds: 2000,
-          other_deductions: 0,
-          total_deductions: 7450,
-          net_salary: 52550,
-          payment_date: '2025-05-01',
-          payment_mode: 'Bank Transfer',
-          status: 'Paid',
-        },
-        {
-          id: 2,
-          payroll_period: '2025-04',
-          employee_code: 'EMP002',
-          employee_name: 'Priya Sharma',
-          department: 'Finance',
-          designation: 'Accounts Executive',
-          basic_salary: 35000,
-          hra: 14000,
-          other_allowances: 3500,
-          gross_salary: 52500,
-          pf_employee: 4200,
-          pf_employer: 4200,
-          esic_employee: 394,
-          esic_employer: 1706,
-          professional_tax: 200,
-          tds: 1500,
-          other_deductions: 0,
-          total_deductions: 6294,
-          net_salary: 46206,
-          payment_date: '2025-05-01',
-          payment_mode: 'Bank Transfer',
-          status: 'Paid',
-        },
-        {
-          id: 3,
-          payroll_period: '2025-04',
-          employee_code: 'EMP003',
-          employee_name: 'Amit Singh',
-          department: 'Sales',
-          designation: 'Sales Executive',
-          basic_salary: 30000,
-          hra: 12000,
-          other_allowances: 8000,
-          gross_salary: 50000,
-          pf_employee: 3600,
-          pf_employer: 3600,
-          esic_employee: 375,
-          esic_employer: 1625,
-          professional_tax: 200,
-          tds: 1200,
-          other_deductions: 0,
-          total_deductions: 5375,
-          net_salary: 44625,
-          payment_date: null,
-          payment_mode: null,
-          status: 'Submitted',
-        },
-        {
-          id: 4,
-          payroll_period: '2025-04',
-          employee_code: 'EMP004',
-          employee_name: 'Sunita Patel',
-          department: 'Purchase',
-          designation: 'Purchase Officer',
-          basic_salary: 32000,
-          hra: 12800,
-          other_allowances: 3200,
-          gross_salary: 48000,
-          pf_employee: 3840,
-          pf_employer: 3840,
-          esic_employee: 360,
-          esic_employer: 1560,
-          professional_tax: 200,
-          tds: 1000,
-          other_deductions: 0,
-          total_deductions: 5400,
-          net_salary: 42600,
-          payment_date: null,
-          payment_mode: null,
-          status: 'Submitted',
-        },
-        {
-          id: 5,
-          payroll_period: '2025-03',
-          employee_code: 'EMP001',
-          employee_name: 'Rajesh Kumar',
-          department: 'Production',
-          designation: 'Production Manager',
-          basic_salary: 40000,
-          hra: 16000,
-          other_allowances: 4000,
-          gross_salary: 60000,
-          pf_employee: 4800,
-          pf_employer: 4800,
-          esic_employee: 450,
-          esic_employer: 1950,
-          professional_tax: 200,
-          tds: 2000,
-          other_deductions: 0,
-          total_deductions: 7450,
-          net_salary: 52550,
-          payment_date: '2025-04-01',
-          payment_mode: 'Bank Transfer',
-          status: 'Paid',
-        },
-      ];
-      setPayrolls(mockPayrolls);
-    } catch (error) {
-      console.error('Failed to load payrolls:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const filteredPayrolls = payrolls.filter((payroll) => {
     const matchesSearch =
       payroll.employee_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -342,7 +210,7 @@ const Payroll: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card>
           <div className="text-sm text-gray-600">Total Employees</div>
           <div className="text-2xl font-bold text-gray-900">{stats.totalEmployees}</div>

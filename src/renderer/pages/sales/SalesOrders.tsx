@@ -86,7 +86,6 @@ export default function SalesOrders() {
 
   useEffect(() => {
     loadOrders();
-    loadSalesOrders();
   }, [state.user?.tenant_id]);
 
   const loadOrders = async () => {
@@ -126,126 +125,8 @@ export default function SalesOrders() {
     }
   };
 
-  const loadSalesOrders = () => {
-    const mockOrders = [
-      {
-        id: '1',
-        order_number: 'SO-2024-0125',
-        order_date: '2024-01-15',
-        customer_code: 'CUST001',
-        customer_name: 'ABC Engineering Pvt Ltd',
-        customer_gstin: '27AABCA1234M1Z5',
-        delivery_date: '2024-01-25',
-        payment_terms: 30,
-        subtotal: 285000,
-        tax_amount: 51300,
-        total_amount: 336300,
-        status: 'processing',
-        payment_status: 'pending',
-        credit_check: 'passed',
-        items_count: 4,
-        fulfilled_qty: 50,
-        total_qty: 100,
-        created_by: 'Sales Team',
-        approved_by: 'Manager',
-      },
-      {
-        id: '2',
-        order_number: 'SO-2024-0124',
-        order_date: '2024-01-14',
-        customer_code: 'CUST002',
-        customer_name: 'XYZ Industries Ltd',
-        customer_gstin: '27AABCX5678N1Z8',
-        delivery_date: '2024-01-20',
-        payment_terms: 45,
-        subtotal: 450000,
-        tax_amount: 81000,
-        total_amount: 531000,
-        status: 'pending_approval',
-        payment_status: 'pending',
-        credit_check: 'warning',
-        items_count: 6,
-        fulfilled_qty: 0,
-        total_qty: 150,
-        created_by: 'Sales Team',
-      },
-      {
-        id: '3',
-        order_number: 'SO-2024-0123',
-        order_date: '2024-01-13',
-        customer_code: 'CUST003',
-        customer_name: 'PQR Manufacturing Co',
-        customer_gstin: '27AABCP9012K1Z2',
-        delivery_date: '2024-01-18',
-        payment_terms: 30,
-        subtotal: 125000,
-        tax_amount: 22500,
-        total_amount: 147500,
-        status: 'delivered',
-        payment_status: 'paid',
-        credit_check: 'passed',
-        items_count: 3,
-        fulfilled_qty: 80,
-        total_qty: 80,
-        created_by: 'Sales Team',
-        approved_by: 'Manager',
-      },
-      {
-        id: '4',
-        order_number: 'SO-2024-0122',
-        order_date: '2024-01-12',
-        customer_code: 'CUST004',
-        customer_name: 'DEF Traders',
-        customer_gstin: '27AABCD3456L1Z9',
-        delivery_date: '2024-01-17',
-        payment_terms: 15,
-        subtotal: 78000,
-        tax_amount: 14040,
-        total_amount: 92040,
-        status: 'shipped',
-        payment_status: 'partial',
-        credit_check: 'passed',
-        items_count: 2,
-        fulfilled_qty: 40,
-        total_qty: 40,
-        created_by: 'Sales Team',
-        approved_by: 'Manager',
-      },
-      {
-        id: '5',
-        order_number: 'SO-2024-0121',
-        order_date: '2024-01-11',
-        customer_code: 'CUST005',
-        customer_name: 'GHI Enterprises',
-        customer_gstin: '29AABCG1234N1Z5',
-        delivery_date: '2024-01-16',
-        payment_terms: 30,
-        subtotal: 320000,
-        tax_amount: 57600,
-        total_amount: 377600,
-        status: 'cancelled',
-        payment_status: 'pending',
-        credit_check: 'failed',
-        items_count: 5,
-        fulfilled_qty: 0,
-        total_qty: 120,
-        created_by: 'Sales Team',
-      },
-    ];
-
-    // Mock order items
-    const mockOrderItems = [
-      { id: '1', item_code: 'FG-PUMP-001', item_name: 'Centrifugal Pump 2HP', hsn_code: '8413', ordered_qty: 20, shipped_qty: 10, pending_qty: 10, uom: 'Nos', unit_price: 15500, discount_percent: 5, taxable_amount: 294500, gst_rate: 18, gst_amount: 53010, total_amount: 347510, available_stock: 45 },
-      { id: '2', item_code: 'FG-MOTOR-002', item_name: 'Electric Motor 5HP', hsn_code: '8501', ordered_qty: 15, shipped_qty: 8, pending_qty: 7, uom: 'Nos', unit_price: 28500, discount_percent: 3, taxable_amount: 414675, gst_rate: 18, gst_amount: 74642, total_amount: 489317, available_stock: 12 },
-      { id: '3', item_code: 'COMP-BEARING-003', item_name: 'Ball Bearing 6205', hsn_code: '8482', ordered_qty: 100, shipped_qty: 50, pending_qty: 50, uom: 'Nos', unit_price: 450, discount_percent: 10, taxable_amount: 40500, gst_rate: 18, gst_amount: 7290, total_amount: 47790, available_stock: 85 },
-    ];
-    
-    setOrders(mockOrders);
-    setOrderItems(mockOrderItems);
-  };
-
   useEffect(() => {
-    loadSalesOrders();
+    // Additional initialization if needed
   }, []);
 
   if (loading) {
@@ -353,7 +234,7 @@ export default function SalesOrders() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">
@@ -536,7 +417,7 @@ export default function SalesOrders() {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-gray-50 rounded-lg p-3">
                 <span className="text-sm text-gray-500">Order Date</span>
                 <div className="font-medium">{formatDate(selectedOrder.order_date)}</div>

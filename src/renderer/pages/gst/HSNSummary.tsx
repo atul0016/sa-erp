@@ -198,7 +198,7 @@ const HSNSummary: React.FC = () => {
       {/* Tax Breakdown */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Tax Breakdown</h2>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-blue-50 p-4 rounded-lg">
             <p className="text-sm text-blue-600 font-medium">IGST</p>
             <p className="text-2xl font-bold text-blue-900">{formatCurrency(summary.totalIGST)}</p>

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true,
+    "outDir": "./dist/main",
+    "rootDir": "./src",
+    "composite": true,
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/types/*": ["src/shared/types/*"],
+      "@/utils/*": ["src/shared/utils/*"]
+    }
+  },
+  "include": ["src/main/**/*", "src/shared/**/*"]
+}

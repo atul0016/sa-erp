@@ -80,107 +80,8 @@ const Vendors: React.FC = () => {
     }
   };
 
-  const loadMockVendors = () => {
-    const mockVendors: Vendor[] = [
-        {
-          id: 1,
-          code: 'V001',
-          name: 'Steel Industries Ltd',
-          gstin: '27AABCU9603R1ZX',
-          pan: 'AABCU9603R',
-          contact_person: 'Rajesh Kumar',
-          phone: '+91-9876543210',
-          email: 'rajesh@steelindustries.com',
-          address: 'Plot No. 45, Industrial Area',
-          city: 'Mumbai',
-          state: 'Maharashtra',
-          pincode: '400001',
-          vendor_type: 'Supplier',
-          payment_terms: 'Net 30',
-          credit_days: 30,
-          credit_limit: 5000000,
-          rating: 4.5,
-          is_gst_registered: true,
-          is_msme: true,
-          outstanding: 250000,
-          status: 'Active',
-        },
-        {
-          id: 2,
-          code: 'V002',
-          name: 'Plastic Components Pvt Ltd',
-          gstin: '29AADCP1234M1Z5',
-          pan: 'AADCP1234M',
-          contact_person: 'Suresh Patel',
-          phone: '+91-9876543211',
-          email: 'suresh@plasticcomponents.com',
-          address: 'Survey No. 123, GIDC',
-          city: 'Ahmedabad',
-          state: 'Gujarat',
-          pincode: '380001',
-          vendor_type: 'Supplier',
-          payment_terms: 'Net 45',
-          credit_days: 45,
-          credit_limit: 3000000,
-          rating: 4.0,
-          is_gst_registered: true,
-          is_msme: false,
-          outstanding: 180000,
-          status: 'Active',
-        },
-        {
-          id: 3,
-          code: 'V003',
-          name: 'Transport Solutions',
-          gstin: null,
-          pan: 'AABCT5678N',
-          contact_person: 'Amit Singh',
-          phone: '+91-9876543212',
-          email: 'amit@transportsolutions.com',
-          address: 'Shop No. 12, Transport Nagar',
-          city: 'Delhi',
-          state: 'Delhi',
-          pincode: '110001',
-          vendor_type: 'Service Provider',
-          payment_terms: 'Immediate',
-          credit_days: 0,
-          credit_limit: 0,
-          rating: 3.5,
-          is_gst_registered: false,
-          is_msme: false,
-          outstanding: 0,
-          status: 'Active',
-        },
-        {
-          id: 4,
-          code: 'V004',
-          name: 'Electrical Components Co',
-          gstin: '33AABCE1234F1Z1',
-          pan: 'AABCE1234F',
-          contact_person: 'Priya Sharma',
-          phone: '+91-9876543213',
-          email: 'priya@electricalcomponents.com',
-          address: 'No. 567, Anna Salai',
-          city: 'Chennai',
-          state: 'Tamil Nadu',
-          pincode: '600001',
-          vendor_type: 'Supplier',
-          payment_terms: 'Net 60',
-          credit_days: 60,
-          credit_limit: 2000000,
-          rating: 4.8,
-          is_gst_registered: true,
-          is_msme: true,
-          outstanding: 320000,
-          status: 'Active',
-        },
-      ];
-      setVendors(mockVendors);
-  };
-
   useEffect(() => {
     loadVendors();
-    loadMockVendors();
   }, [state.user?.tenant_id]);
 
   const filteredVendors = vendors.filter((vendor) => {
@@ -304,7 +205,7 @@ const Vendors: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card>
           <div className="text-sm text-gray-600">Total Vendors</div>
           <div className="text-2xl font-bold text-gray-900">{stats.totalVendors}</div>

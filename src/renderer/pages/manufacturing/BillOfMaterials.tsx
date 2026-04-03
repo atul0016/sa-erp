@@ -56,6 +56,8 @@ interface BOMOperation {
 const BillOfMaterials: React.FC = () => {
   const { state } = useApp();
   const [boms, setBoms] = useState<BOM[]>([]);
+  const [components, setComponents] = useState<BOMComponent[]>([]);
+  const [operations, setOperations] = useState<BOMOperation[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
@@ -94,86 +96,6 @@ const BillOfMaterials: React.FC = () => {
       }
     } catch (error) {
       console.error('Error loading BOMs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadMockBOMs = () => {
-    try {
-      const mockBOMs: BOM[] = [
-        {
-          id: 1,
-          bom_code: 'BOM-001',
-          item_name: 'Steel Table - 4ft',
-          item_code: 'FG-TABLE-001',
-          quantity: 1,
-          uom: 'Nos',
-          bom_type: 'Manufacturing',
-          is_active: true,
-          is_default: true,
-          operation_cost: 500,
-          raw_material_cost: 3500,
-          total_cost: 4000,
-          components_count: 8,
-          operations_count: 5,
-          version: 2,
-        },
-        {
-          id: 2,
-          bom_code: 'BOM-002',
-          item_name: 'Plastic Chair - Standard',
-          item_code: 'FG-CHAIR-001',
-          quantity: 1,
-          uom: 'Nos',
-          bom_type: 'Manufacturing',
-          is_active: true,
-          is_default: true,
-          operation_cost: 200,
-          raw_material_cost: 800,
-          total_cost: 1000,
-          components_count: 5,
-          operations_count: 3,
-          version: 1,
-        },
-        {
-          id: 3,
-          bom_code: 'BOM-003',
-          item_name: 'Assembly Kit - Dining Set',
-          item_code: 'FG-DSET-001',
-          quantity: 1,
-          uom: 'Set',
-          bom_type: 'Assembly',
-          is_active: true,
-          is_default: true,
-          operation_cost: 150,
-          raw_material_cost: 15000,
-          total_cost: 15150,
-          components_count: 2,
-          operations_count: 1,
-          version: 1,
-        },
-        {
-          id: 4,
-          bom_code: 'BOM-004',
-          item_name: 'Metal Cabinet - 6ft',
-          item_code: 'FG-CAB-001',
-          quantity: 1,
-          uom: 'Nos',
-          bom_type: 'Manufacturing',
-          is_active: false,
-          is_default: false,
-          operation_cost: 800,
-          raw_material_cost: 5200,
-          total_cost: 6000,
-          components_count: 12,
-          operations_count: 7,
-          version: 3,
-        },
-      ];
-      setBoms(mockBOMs);
-    } catch (error) {
-      console.error('Failed to load BOMs:', error);
     } finally {
       setLoading(false);
     }
@@ -272,52 +194,22 @@ const BillOfMaterials: React.FC = () => {
     setShowDetailModal(true);
   };
 
-  // Mock BOM components and operations for detail view
-  const mockComponents: BOMComponent[] = [
-    {
-      id: 1,
-      item_name: 'MS Angle 50x50x6mm',
-      item_code: 'RM-ANGLE-001',
-      quantity: 4,
-      uom: 'Kg',
-      rate: 75,
-      amount: 300,
-      wastage_percent: 5,
-      source_warehouse: 'Main Warehouse',
-    },
-    {
-      id: 2,
-      item_name: 'MS Flat 50x6mm',
-      item_code: 'RM-FLAT-001',
-      quantity: 2,
-      uom: 'Kg',
-      rate: 80,
-      amount: 160,
-      wastage_percent: 3,
-      source_warehouse: 'Main Warehouse',
-    },
-  ];
-
-  const mockOperations: BOMOperation[] = [
-    {
-      id: 1,
-      operation_name: 'Cutting',
-      work_center: 'Cutting Machine 1',
-      time_in_mins: 15,
-      hour_rate: 500,
-      operating_cost: 125,
-      description: 'Cut raw materials to size',
-    },
-    {
-      id: 2,
-      operation_name: 'Welding',
-      work_center: 'Welding Station 1',
-      time_in_mins: 30,
-      hour_rate: 600,
-      operating_cost: 300,
-      description: 'Weld frame components',
-    },
-  ];
+  useEffect(() => {
+    const loadBOMDetails = async () => {
+      if (!selectedBOM || !state.user?.tenant_id) return;
+      try {
+        const [compRes, opsRes] = await Promise.all([
+          window.electronAPI.manufacturing.getBOMComponents(state.user.tenant_id, selectedBOM.id),
+          window.electronAPI.manufacturing.getBOMOperations(state.user.tenant_id, selectedBOM.id),
+        ]);
+        if (compRes.success && compRes.data) setComponents(compRes.data);
+        if (opsRes.success && opsRes.data) setOperations(opsRes.data);
+      } catch (error) {
+        console.error('Error loading BOM details:', error);
+      }
+    };
+    loadBOMDetails();
+  }, [selectedBOM?.id]);
 
   return (
     <div className="space-y-6">
@@ -334,7 +226,7 @@ const BillOfMaterials: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <div className="text-sm text-gray-600">Total BOMs</div>
           <div className="text-2xl font-bold text-gray-900">{stats.totalBOMs}</div>
@@ -420,7 +312,7 @@ const BillOfMaterials: React.FC = () => {
             <div>
               <h3 className="font-medium mb-3 flex items-center gap-2">
                 <CubeIcon className="h-5 w-5" />
-                Components ({mockComponents.length})
+                Components ({components.length})
               </h3>
               <div className="border rounded-lg overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -447,7 +339,7 @@ const BillOfMaterials: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {mockComponents.map((component) => (
+                    {components.map((component) => (
                       <tr key={component.id}>
                         <td className="px-4 py-3">
                           <div className="font-medium">{component.item_name}</div>
@@ -473,7 +365,7 @@ const BillOfMaterials: React.FC = () => {
             <div>
               <h3 className="font-medium mb-3 flex items-center gap-2">
                 <WrenchScrewdriverIcon className="h-5 w-5" />
-                Operations ({mockOperations.length})
+                Operations ({operations.length})
               </h3>
               <div className="border rounded-lg overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -497,7 +389,7 @@ const BillOfMaterials: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {mockOperations.map((operation) => (
+                    {operations.map((operation) => (
                       <tr key={operation.id}>
                         <td className="px-4 py-3">
                           <div className="font-medium">{operation.operation_name}</div>

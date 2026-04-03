@@ -56,6 +56,7 @@ interface POItem {
 const PurchaseOrders: React.FC = () => {
   const { state } = useApp();
   const [orders, setOrders] = useState<PurchaseOrder[]>([]);
+  const [poItems, setPOItems] = useState<POItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -194,26 +195,20 @@ const PurchaseOrders: React.FC = () => {
     setShowDetailModal(true);
   };
 
-  // Mock PO items for detail view
-  const mockPOItems: POItem[] = [
-    {
-      id: 1,
-      item_name: 'MS Angle 50x50x6mm',
-      hsn_code: '7216',
-      quantity: 100,
-      uom: 'Kg',
-      rate: 75,
-      discount_percent: 5,
-      taxable_amount: 7125,
-      gst_rate: 18,
-      cgst_amount: 641.25,
-      sgst_amount: 641.25,
-      igst_amount: 0,
-      total_amount: 8407.5,
-      received_quantity: 0,
-      pending_quantity: 100,
-    },
-  ];
+  useEffect(() => {
+    const loadPOItems = async () => {
+      if (!selectedOrder || !state.user?.tenant_id) return;
+      try {
+        const response = await window.electronAPI.purchase.getPurchaseOrderItems(state.user.tenant_id, selectedOrder.id);
+        if (response.success && response.data) {
+          setPOItems(response.data);
+        }
+      } catch (error) {
+        console.error('Error loading PO items:', error);
+      }
+    };
+    loadPOItems();
+  }, [selectedOrder?.id]);
 
   return (
     <div className="space-y-6">
@@ -230,7 +225,7 @@ const PurchaseOrders: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card>
           <div className="text-sm text-gray-600">Total Orders</div>
           <div className="text-2xl font-bold text-gray-900">{stats.totalOrders}</div>
@@ -343,7 +338,7 @@ const PurchaseOrders: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {mockPOItems.map((item) => (
+                    {poItems.map((item) => (
                       <tr key={item.id}>
                         <td className="px-4 py-3">
                           <div className="font-medium">{item.item_name}</div>

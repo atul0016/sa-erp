@@ -54,6 +54,7 @@ interface MaterialRequirement {
 const ProductionOrders: React.FC = () => {
   const { state } = useApp();
   const [orders, setOrders] = useState<ProductionOrder[]>([]);
+  const [materials, setMaterials] = useState<MaterialRequirement[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -103,112 +104,6 @@ const ProductionOrders: React.FC = () => {
       setLoading(false);
     }
   };
-
-  const loadMockOrders = () => {
-    const mockOrders: ProductionOrder[] = [
-        {
-          id: 1,
-          po_number: 'PRO/2025-26/001',
-          po_date: '2025-04-01',
-          item_name: 'Steel Table - 4ft',
-          item_code: 'FG-TABLE-001',
-          bom_code: 'BOM-001',
-          qty_to_manufacture: 50,
-          manufactured_qty: 30,
-          uom: 'Nos',
-          planned_start_date: '2025-04-05',
-          planned_end_date: '2025-04-15',
-          actual_start_date: '2025-04-05',
-          actual_end_date: null,
-          work_center: 'Assembly Line 1',
-          source_warehouse: 'Main Warehouse',
-          target_warehouse: 'Finished Goods',
-          status: 'In Progress',
-          priority: 'High',
-          material_cost: 175000,
-          operation_cost: 25000,
-          total_cost: 200000,
-          progress_percent: 60,
-        },
-        {
-          id: 2,
-          po_number: 'PRO/2025-26/002',
-          po_date: '2025-04-03',
-          item_name: 'Plastic Chair - Standard',
-          item_code: 'FG-CHAIR-001',
-          bom_code: 'BOM-002',
-          qty_to_manufacture: 100,
-          manufactured_qty: 100,
-          uom: 'Nos',
-          planned_start_date: '2025-04-06',
-          planned_end_date: '2025-04-12',
-          actual_start_date: '2025-04-06',
-          actual_end_date: '2025-04-11',
-          work_center: 'Molding Machine 2',
-          source_warehouse: 'Main Warehouse',
-          target_warehouse: 'Finished Goods',
-          status: 'Completed',
-          priority: 'Medium',
-          material_cost: 80000,
-          operation_cost: 20000,
-          total_cost: 100000,
-          progress_percent: 100,
-        },
-        {
-          id: 3,
-          po_number: 'PRO/2025-26/003',
-          po_date: '2025-04-07',
-          item_name: 'Metal Cabinet - 6ft',
-          item_code: 'FG-CAB-001',
-          bom_code: 'BOM-004',
-          qty_to_manufacture: 25,
-          manufactured_qty: 0,
-          uom: 'Nos',
-          planned_start_date: '2025-04-10',
-          planned_end_date: '2025-04-20',
-          actual_start_date: null,
-          actual_end_date: null,
-          work_center: 'Fabrication Unit 1',
-          source_warehouse: 'Main Warehouse',
-          target_warehouse: 'Finished Goods',
-          status: 'Submitted',
-          priority: 'Urgent',
-          material_cost: 130000,
-          operation_cost: 20000,
-          total_cost: 150000,
-          progress_percent: 0,
-        },
-        {
-          id: 4,
-          po_number: 'PRO/2025-26/004',
-          po_date: '2025-04-08',
-          item_name: 'Steel Table - 4ft',
-          item_code: 'FG-TABLE-001',
-          bom_code: 'BOM-001',
-          qty_to_manufacture: 30,
-          manufactured_qty: 0,
-          uom: 'Nos',
-          planned_start_date: '2025-04-16',
-          planned_end_date: '2025-04-25',
-          actual_start_date: null,
-          actual_end_date: null,
-          work_center: 'Assembly Line 2',
-          source_warehouse: 'Main Warehouse',
-          target_warehouse: 'Finished Goods',
-          status: 'Draft',
-          priority: 'Low',
-          material_cost: 105000,
-          operation_cost: 15000,
-          total_cost: 120000,
-          progress_percent: 0,
-        },
-      ];
-      setOrders(mockOrders);
-  };
-
-  useEffect(() => {
-    loadOrders();
-  }, [state.user?.tenant_id]);
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
@@ -342,33 +237,20 @@ const ProductionOrders: React.FC = () => {
     setShowDetailModal(true);
   };
 
-  // Mock material requirements for detail view
-  const mockMaterials: MaterialRequirement[] = [
-    {
-      id: 1,
-      item_name: 'MS Angle 50x50x6mm',
-      item_code: 'RM-ANGLE-001',
-      required_qty: 200,
-      transferred_qty: 200,
-      consumed_qty: 120,
-      uom: 'Kg',
-      source_warehouse: 'Main Warehouse',
-      rate: 75,
-      amount: 15000,
-    },
-    {
-      id: 2,
-      item_name: 'MS Flat 50x6mm',
-      item_code: 'RM-FLAT-001',
-      required_qty: 100,
-      transferred_qty: 100,
-      consumed_qty: 60,
-      uom: 'Kg',
-      source_warehouse: 'Main Warehouse',
-      rate: 80,
-      amount: 8000,
-    },
-  ];
+  useEffect(() => {
+    const loadMaterials = async () => {
+      if (!selectedOrder || !state.user?.tenant_id) return;
+      try {
+        const response = await window.electronAPI.manufacturing.getProductionOrderMaterials(state.user.tenant_id, selectedOrder.id);
+        if (response.success && response.data) {
+          setMaterials(response.data);
+        }
+      } catch (error) {
+        console.error('Error loading materials:', error);
+      }
+    };
+    loadMaterials();
+  }, [selectedOrder?.id]);
 
   return (
     <div className="space-y-6">
@@ -385,7 +267,7 @@ const ProductionOrders: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card>
           <div className="text-sm text-gray-600">Total Orders</div>
           <div className="text-2xl font-bold text-gray-900">{stats.totalOrders}</div>
@@ -523,7 +405,7 @@ const ProductionOrders: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {mockMaterials.map((material) => (
+                    {materials.map((material) => (
                       <tr key={material.id}>
                         <td className="px-4 py-3">
                           <div className="font-medium">{material.item_name}</div>

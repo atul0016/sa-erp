@@ -72,10 +72,10 @@ const Attendance: React.FC = () => {
   }, [state.user?.tenant_id]);
 
   useEffect(() => {
-    if (state.user?.tenant_id) {
+    if (state.user?.tenant_id && employees.length > 0) {
       loadAttendance();
     }
-  }, [currentDate, state.user?.tenant_id]);
+  }, [currentDate, state.user?.tenant_id, employees]);
 
   const loadEmployees = async () => {
     if (!state.user?.tenant_id) return;
@@ -148,42 +148,7 @@ const Attendance: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const mockEmployees: Employee[] = [
-      { id: 'E001', empCode: 'EMP-001', name: 'Rajesh Kumar', department: 'Production', designation: 'Supervisor', shift: 'Day Shift' },
-      { id: 'E002', empCode: 'EMP-002', name: 'Priya Sharma', department: 'Accounts', designation: 'Accountant', shift: 'General' },
-      { id: 'E003', empCode: 'EMP-003', name: 'Amit Patel', department: 'Production', designation: 'Operator', shift: 'Day Shift' },
-      { id: 'E004', empCode: 'EMP-004', name: 'Sunita Verma', department: 'HR', designation: 'HR Executive', shift: 'General' },
-      { id: 'E005', empCode: 'EMP-005', name: 'Vikram Singh', department: 'Sales', designation: 'Sales Executive', shift: 'General' },
-      { id: 'E006', empCode: 'EMP-006', name: 'Meera Joshi', department: 'Production', designation: 'Operator', shift: 'Night Shift' },
-      { id: 'E007', empCode: 'EMP-007', name: 'Rahul Gupta', department: 'Stores', designation: 'Store Keeper', shift: 'Day Shift' },
-      { id: 'E008', empCode: 'EMP-008', name: 'Anita Das', department: 'Quality', designation: 'QC Inspector', shift: 'Day Shift' },
-    ];
 
-    const mockAttendance: AttendanceRecord[] = mockEmployees.map((emp) => ({
-      id: `ATT-${emp.id}-${currentDate.toISOString().split('T')[0]}`,
-      employeeId: emp.id,
-      date: currentDate.toISOString().split('T')[0],
-      status: ['Present', 'Present', 'Present', 'Half Day', 'Leave', 'Present', 'Absent', 'Present'][
-        mockEmployees.indexOf(emp)
-      ] as AttendanceRecord['status'],
-      leaveType: emp.id === 'E005' ? 'CL' : undefined,
-      inTime: emp.id !== 'E005' && emp.id !== 'E007' ? '09:00' : undefined,
-      outTime: emp.id !== 'E005' && emp.id !== 'E007' ? '18:00' : undefined,
-      totalHours: emp.id !== 'E005' && emp.id !== 'E007' ? 9 : 0,
-      overtime: emp.id === 'E003' ? 2 : 0,
-      lateBy: emp.id === 'E006' ? 15 : 0,
-      earlyBy: emp.id === 'E004' ? 30 : 0,
-      shift: emp.shift,
-      remarks: emp.id === 'E004' ? 'Left early - Personal work' : undefined,
-    }));
-
-    setTimeout(() => {
-      setEmployees(mockEmployees);
-      setAttendance(mockAttendance);
-      setLoading(false);
-    }, 500);
-  }, [currentDate]);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-IN', {

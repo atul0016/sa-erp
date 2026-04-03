@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f97316;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="240" height="240" rx="40" ry="40" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle inner shadow/border -->
+  <rect x="8" y="8" width="240" height="240" rx="40" ry="40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  
+  <!-- Abstract grid/module blocks representing ERP modules (top-left area) -->
+  <rect x="36" y="36" width="38" height="38" rx="8" fill="rgba(255,255,255,0.2)"/>
+  <rect x="80" y="36" width="38" height="38" rx="8" fill="rgba(255,255,255,0.15)"/>
+  <rect x="36" y="80" width="38" height="38" rx="8" fill="rgba(255,255,255,0.12)"/>
+  <rect x="80" y="80" width="38" height="38" rx="8" fill="rgba(255,255,255,0.08)"/>
+  
+  <!-- Accent bar (Indian saffron touch) -->
+  <rect x="138" y="36" width="82" height="6" rx="3" fill="url(#accentGrad)"/>
+  <rect x="138" y="50" width="58" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
+  <rect x="138" y="62" width="70" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
+  
+  <!-- Upward arrow / growth indicator -->
+  <polygon points="172,108 184,88 196,108" fill="url(#accentGrad)"/>
+  <rect x="181" y="105" width="6" height="16" rx="2" fill="url(#accentGrad)"/>
+  
+  <!-- "SA" text -->
+  <text x="128" y="178" font-family="'Segoe UI', Arial, Helvetica, sans-serif" font-size="72" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-2">SA</text>
+  
+  <!-- "ERP" text below -->
+  <text x="128" y="218" font-family="'Segoe UI', Arial, Helvetica, sans-serif" font-size="32" font-weight="600" fill="rgba(255,255,255,0.85)" text-anchor="middle" letter-spacing="8">ERP</text>
+  
+  <!-- Bottom accent line -->
+  <rect x="78" y="228" width="100" height="3" rx="1.5" fill="url(#accentGrad)"/>
+</svg>

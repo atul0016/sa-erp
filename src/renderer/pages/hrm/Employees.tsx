@@ -79,133 +79,6 @@ const Employees: React.FC = () => {
     }
   };
 
-  const loadMockEmployees = () => {
-    try {
-      const mockEmployees: Employee[] = [
-        {
-          id: 1,
-          employee_code: 'EMP001',
-          employee_name: 'Rajesh Kumar',
-          designation: 'Production Manager',
-          department: 'Production',
-          date_of_joining: '2020-01-15',
-          date_of_birth: '1985-05-20',
-          gender: 'Male',
-          phone: '+91-9876543210',
-          email: 'rajesh@company.com',
-          pan: 'ABCDE1234F',
-          uan: '123456789012',
-          esic_no: '1234567890123456',
-          bank_account: '1234567890',
-          bank_ifsc: 'SBIN0001234',
-          basic_salary: 40000,
-          hra: 16000,
-          other_allowances: 4000,
-          gross_salary: 60000,
-          status: 'Active',
-          reporting_manager: 'Admin User',
-        },
-        {
-          id: 2,
-          employee_code: 'EMP002',
-          employee_name: 'Priya Sharma',
-          designation: 'Accounts Executive',
-          department: 'Finance',
-          date_of_joining: '2021-03-10',
-          date_of_birth: '1990-08-15',
-          gender: 'Female',
-          phone: '+91-9876543211',
-          email: 'priya@company.com',
-          pan: 'BCDEF5678G',
-          uan: '234567890123',
-          esic_no: '2345678901234567',
-          bank_account: '2345678901',
-          bank_ifsc: 'HDFC0001234',
-          basic_salary: 35000,
-          hra: 14000,
-          other_allowances: 3500,
-          gross_salary: 52500,
-          status: 'Active',
-          reporting_manager: 'Admin User',
-        },
-        {
-          id: 3,
-          employee_code: 'EMP003',
-          employee_name: 'Amit Singh',
-          designation: 'Sales Executive',
-          department: 'Sales',
-          date_of_joining: '2019-06-01',
-          date_of_birth: '1988-12-10',
-          gender: 'Male',
-          phone: '+91-9876543212',
-          email: 'amit@company.com',
-          pan: 'CDEFG9012H',
-          uan: '345678901234',
-          esic_no: '3456789012345678',
-          bank_account: '3456789012',
-          bank_ifsc: 'ICIC0001234',
-          basic_salary: 30000,
-          hra: 12000,
-          other_allowances: 8000,
-          gross_salary: 50000,
-          status: 'Active',
-          reporting_manager: 'Admin User',
-        },
-        {
-          id: 4,
-          employee_code: 'EMP004',
-          employee_name: 'Sunita Patel',
-          designation: 'Purchase Officer',
-          department: 'Purchase',
-          date_of_joining: '2022-01-05',
-          date_of_birth: '1992-03-25',
-          gender: 'Female',
-          phone: '+91-9876543213',
-          email: 'sunita@company.com',
-          pan: 'DEFGH3456I',
-          uan: '456789012345',
-          esic_no: '4567890123456789',
-          bank_account: '4567890123',
-          bank_ifsc: 'AXIS0001234',
-          basic_salary: 32000,
-          hra: 12800,
-          other_allowances: 3200,
-          gross_salary: 48000,
-          status: 'Active',
-          reporting_manager: 'Rajesh Kumar',
-        },
-        {
-          id: 5,
-          employee_code: 'EMP005',
-          employee_name: 'Vijay Verma',
-          designation: 'Production Supervisor',
-          department: 'Production',
-          date_of_joining: '2018-09-20',
-          date_of_birth: '1982-07-18',
-          gender: 'Male',
-          phone: '+91-9876543214',
-          email: 'vijay@company.com',
-          pan: 'EFGHI7890J',
-          uan: '567890123456',
-          esic_no: '5678901234567890',
-          bank_account: '5678901234',
-          bank_ifsc: 'PUNB0001234',
-          basic_salary: 28000,
-          hra: 11200,
-          other_allowances: 2800,
-          gross_salary: 42000,
-          status: 'Resigned',
-          reporting_manager: 'Rajesh Kumar',
-        },
-      ];
-      setEmployees(mockEmployees);
-    } catch (error) {
-      console.error('Failed to load employees:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const filteredEmployees = employees.filter((employee) => {
     const matchesSearch =
       employee.employee_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -298,21 +171,21 @@ const Employees: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
-          <div className="text-sm text-gray-600">Total Employees</div>
+          <div className="text-sm text-gray-600 truncate">Total Employees</div>
           <div className="text-2xl font-bold text-gray-900">{stats.totalEmployees}</div>
         </Card>
         <Card>
-          <div className="text-sm text-gray-600">Active</div>
+          <div className="text-sm text-gray-600 truncate">Active</div>
           <div className="text-2xl font-bold text-green-600">{stats.active}</div>
         </Card>
         <Card>
-          <div className="text-sm text-gray-600">Resigned</div>
+          <div className="text-sm text-gray-600 truncate">Resigned</div>
           <div className="text-2xl font-bold text-red-600">{stats.resigned}</div>
         </Card>
         <Card>
-          <div className="text-sm text-gray-600">Total Monthly Salary</div>
+          <div className="text-sm text-gray-600 truncate">Total Monthly Salary</div>
           <div className="text-2xl font-bold text-purple-600">
             ₹{stats.totalSalary.toLocaleString('en-IN')}
           </div>
@@ -403,7 +276,7 @@ const Employees: React.FC = () => {
               <Input label="Bank Account" />
               <Input label="Bank IFSC" />
             </div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Input label="Basic Salary" type="number" required />
               <Input label="HRA" type="number" />
               <Input label="Other Allowances" type="number" />

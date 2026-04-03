@@ -52,167 +52,17 @@ const TaxDeclarations: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('all');
 
   useEffect(() => {
-    // Mock data
-    const mockData: TaxDeclaration[] = [
-      {
-        id: '1',
-        employeeId: 'EMP-001',
-        employeeName: 'Rajesh Kumar',
-        department: 'Production',
-        financialYear: '2023-24',
-        regime: 'Old',
-        submittedOn: '2024-01-15',
-        status: 'Approved',
-        totalDeclared: 200000,
-        totalApproved: 195000,
-        totalTaxSavings: 62400,
-        components: [
-          {
-            component: 'HRA (House Rent Allowance)',
-            declared: 120000,
-            proofSubmitted: true,
-            proofAmount: 120000,
-            approved: 120000,
-            status: 'Approved',
-            icon: <Home className="h-5 w-5" />,
-            color: 'blue',
-          },
-          {
-            component: '80C - PPF, LIC, ELSS',
-            declared: 150000,
-            proofSubmitted: true,
-            proofAmount: 145000,
-            approved: 145000,
-            status: 'Approved',
-            icon: <Shield className="h-5 w-5" />,
-            color: 'green',
-          },
-          {
-            component: '80D - Medical Insurance',
-            declared: 25000,
-            proofSubmitted: true,
-            proofAmount: 25000,
-            approved: 25000,
-            status: 'Approved',
-            icon: <Heart className="h-5 w-5" />,
-            color: 'red',
-          },
-          {
-            component: '80E - Education Loan Interest',
-            declared: 15000,
-            proofSubmitted: true,
-            proofAmount: 15000,
-            approved: 15000,
-            status: 'Approved',
-            icon: <GraduationCap className="h-5 w-5" />,
-            color: 'purple',
-          },
-        ],
-        remarks: 'All documents verified and approved',
-      },
-      {
-        id: '2',
-        employeeId: 'EMP-015',
-        employeeName: 'Priya Sharma',
-        department: 'Quality',
-        financialYear: '2023-24',
-        regime: 'New',
-        submittedOn: '2024-01-18',
-        status: 'Approved',
-        totalDeclared: 0,
-        totalApproved: 0,
-        totalTaxSavings: 0,
-        components: [],
-        remarks: 'Opted for new tax regime - no deductions applicable',
-      },
-      {
-        id: '3',
-        employeeId: 'EMP-023',
-        employeeName: 'Suresh Reddy',
-        department: 'Maintenance',
-        financialYear: '2023-24',
-        regime: 'Old',
-        submittedOn: '2024-01-20',
-        status: 'Under Review',
-        totalDeclared: 185000,
-        totalApproved: 0,
-        totalTaxSavings: 0,
-        components: [
-          {
-            component: 'HRA (House Rent Allowance)',
-            declared: 100000,
-            proofSubmitted: true,
-            proofAmount: 100000,
-            approved: 0,
-            status: 'Under Review',
-            icon: <Home className="h-5 w-5" />,
-            color: 'blue',
-          },
-          {
-            component: '80C - PPF, LIC, ELSS',
-            declared: 150000,
-            proofSubmitted: true,
-            proofAmount: 150000,
-            approved: 0,
-            status: 'Under Review',
-            icon: <Shield className="h-5 w-5" />,
-            color: 'green',
-          },
-          {
-            component: '80D - Medical Insurance',
-            declared: 30000,
-            proofSubmitted: false,
-            proofAmount: 0,
-            approved: 0,
-            status: 'Pending',
-            icon: <Heart className="h-5 w-5" />,
-            color: 'red',
-          },
-        ],
-        remarks: 'Awaiting medical insurance proof',
-      },
-      {
-        id: '4',
-        employeeId: 'EMP-008',
-        employeeName: 'Anjali Gupta',
-        department: 'Accounts',
-        financialYear: '2023-24',
-        regime: 'Old',
-        submittedOn: '2024-01-22',
-        status: 'Submitted',
-        totalDeclared: 160000,
-        totalApproved: 0,
-        totalTaxSavings: 0,
-        components: [
-          {
-            component: 'HRA (House Rent Allowance)',
-            declared: 90000,
-            proofSubmitted: false,
-            proofAmount: 0,
-            approved: 0,
-            status: 'Pending',
-            icon: <Home className="h-5 w-5" />,
-            color: 'blue',
-          },
-          {
-            component: '80C - PPF, LIC, ELSS',
-            declared: 150000,
-            proofSubmitted: false,
-            proofAmount: 0,
-            approved: 0,
-            status: 'Pending',
-            icon: <Shield className="h-5 w-5" />,
-            color: 'green',
-          },
-        ],
-        remarks: 'Proofs pending submission',
-      },
-    ];
-
-    setTimeout(() => {
-      setDeclarations(mockData);
-      setLoading(false);
-    }, 500);
+    const loadDeclarations = async () => {
+      try {
+        const result = await (window as any).electronAPI.hrm.getTaxDeclarations();
+        if (result?.success) setDeclarations(result.data);
+      } catch (error) {
+        console.error('Failed to load tax declarations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDeclarations();
   }, []);
 
   const formatCurrency = (amount: number) => {
@@ -316,7 +166,7 @@ const TaxDeclarations: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
           <div className="flex items-center gap-3">
             <FileText className="h-8 w-8 text-blue-600" />
@@ -429,7 +279,7 @@ const TaxDeclarations: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               <div className="bg-gray-50 p-3 rounded-lg">
                 <p className="text-xs text-gray-500">Tax Regime</p>
                 <p className="text-lg font-bold text-gray-900">{dec.regime}</p>

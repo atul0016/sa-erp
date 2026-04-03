@@ -56,111 +56,29 @@ export default function OEEDashboard() {
   const [downtimeBreakdown, setDowntimeBreakdown] = useState<DowntimeBreakdown[]>([]);
   const [trendData, setTrendData] = useState<{ date: string; oee: number }[]>([]);
 
-  // Mock data for demo
+  // Load OEE data from API
   useEffect(() => {
-    // Set mock OEE data
-    setOeeData([
-      {
-        id: '1',
-        work_center_code: 'WC-CNC-01',
-        work_center_name: 'CNC Machine 1',
-        date: '2024-01-15',
-        availability: 92.5,
-        performance: 88.3,
-        quality: 97.8,
-        oee: 79.9,
-        planned_production_time: 480,
-        actual_production_time: 444,
-        downtime_minutes: 36,
-        ideal_cycle_time: 2.5,
-        actual_cycle_time: 2.83,
-        total_produced: 157,
-        good_produced: 154,
-        defects: 3,
-      },
-      {
-        id: '2',
-        work_center_code: 'WC-CNC-02',
-        work_center_name: 'CNC Machine 2',
-        date: '2024-01-15',
-        availability: 88.2,
-        performance: 91.5,
-        quality: 95.2,
-        oee: 76.8,
-        planned_production_time: 480,
-        actual_production_time: 423,
-        downtime_minutes: 57,
-        ideal_cycle_time: 3.0,
-        actual_cycle_time: 3.28,
-        total_produced: 129,
-        good_produced: 123,
-        defects: 6,
-      },
-      {
-        id: '3',
-        work_center_code: 'WC-LATHE-01',
-        work_center_name: 'Lathe Machine 1',
-        date: '2024-01-15',
-        availability: 95.8,
-        performance: 84.2,
-        quality: 98.9,
-        oee: 79.8,
-        planned_production_time: 480,
-        actual_production_time: 460,
-        downtime_minutes: 20,
-        ideal_cycle_time: 1.8,
-        actual_cycle_time: 2.14,
-        total_produced: 215,
-        good_produced: 213,
-        defects: 2,
-      },
-      {
-        id: '4',
-        work_center_code: 'WC-MILL-01',
-        work_center_name: 'Milling Machine 1',
-        date: '2024-01-15',
-        availability: 78.5,
-        performance: 92.1,
-        quality: 96.5,
-        oee: 69.8,
-        planned_production_time: 480,
-        actual_production_time: 377,
-        downtime_minutes: 103,
-        ideal_cycle_time: 4.0,
-        actual_cycle_time: 4.34,
-        total_produced: 87,
-        good_produced: 84,
-        defects: 3,
-      },
-    ]);
-
-    // Calculate overall OEE
-    setOverallOEE({
-      availability: 88.8,
-      performance: 89.0,
-      quality: 97.1,
-      oee: 76.8,
-    });
-
-    // Downtime breakdown
-    setDowntimeBreakdown([
-      { reason: 'Machine Breakdown', minutes: 85, percentage: 39.4, color: 'bg-red-500' },
-      { reason: 'Changeover', minutes: 62, percentage: 28.7, color: 'bg-yellow-500' },
-      { reason: 'Material Shortage', minutes: 35, percentage: 16.2, color: 'bg-orange-500' },
-      { reason: 'Planned Maintenance', minutes: 25, percentage: 11.6, color: 'bg-blue-500' },
-      { reason: 'Other', minutes: 9, percentage: 4.1, color: 'bg-gray-500' },
-    ]);
-
-    // Trend data (last 7 days)
-    setTrendData([
-      { date: '01/09', oee: 72.5 },
-      { date: '01/10', oee: 75.8 },
-      { date: '01/11', oee: 71.2 },
-      { date: '01/12', oee: 78.4 },
-      { date: '01/13', oee: 80.1 },
-      { date: '01/14', oee: 74.9 },
-      { date: '01/15', oee: 76.8 },
-    ]);
+    const loadOEEData = async () => {
+      try {
+        const result = await (window as any).electronAPI.manufacturing.getOEEMetrics();
+        if (result?.success) {
+          const d = result.data;
+          setOeeData(d.machines || []);
+          setOverallOEE(d.overall || { availability: 0, performance: 0, quality: 0, oee: 0 });
+          setDowntimeBreakdown((d.downtimeReasons || []).map((r: any, i: number) => ({
+            ...r,
+            color: ['bg-red-500', 'bg-yellow-500', 'bg-orange-500', 'bg-blue-500', 'bg-gray-500'][i] || 'bg-gray-500',
+          })));
+          setTrendData((d.trends?.dates || []).map((date: string, i: number) => ({
+            date,
+            oee: d.trends?.oee?.[i] || 0,
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to load OEE data:', error);
+      }
+    };
+    loadOEEData();
   }, [selectedPeriod, selectedWorkCenter]);
 
   const getOEEColor = (value: number) => {
@@ -232,7 +150,7 @@ export default function OEEDashboard() {
 
       {/* Overall OEE Card */}
       <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {/* OEE Score */}
           <div className="text-center">
             <div className="relative inline-block">

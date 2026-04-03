@@ -1,5 +1,7 @@
 export { Dashboard } from './Dashboard';
 export { Login } from './Login';
+export { ApprovalQueue } from './ApprovalQueue';
+export { NotificationCenter } from './NotificationCenter';
 
 // Finance
 export * from './finance';

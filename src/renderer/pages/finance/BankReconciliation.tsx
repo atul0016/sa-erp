@@ -70,36 +70,21 @@ export default function BankReconciliation() {
   const [isAutoMatching, setIsAutoMatching] = useState(false);
 
   useEffect(() => {
-    // Mock bank entries
-    setBankEntries([
-      { id: 'B1', date: '2024-01-05', description: 'NEFT-SHARMA ENGINEERING WORKS', reference: 'NEFT-UTR12345', debit: 125000, credit: 0, balance: 875000, matched: true, matched_to: 'L1', confidence: 95 },
-      { id: 'B2', date: '2024-01-08', description: 'CHQ DEP-XYZ TRADERS', reference: 'CHQ-456789', debit: 0, credit: 250000, balance: 1125000, matched: true, matched_to: 'L2', confidence: 92 },
-      { id: 'B3', date: '2024-01-10', description: 'RTGS-KUMAR CONSULTANTS', reference: 'RTGS-789012', debit: 85000, credit: 0, balance: 1040000, matched: false },
-      { id: 'B4', date: '2024-01-12', description: 'IMPS-MISC PAYMENT', reference: 'IMPS-345678', debit: 15000, credit: 0, balance: 1025000, matched: false },
-      { id: 'B5', date: '2024-01-15', description: 'CHQ DEP-ABC CORP', reference: 'CHQ-901234', debit: 0, credit: 180000, balance: 1205000, matched: true, matched_to: 'L4', confidence: 88 },
-      { id: 'B6', date: '2024-01-18', description: 'BANK CHARGES', reference: 'BC-JAN2024', debit: 2500, credit: 0, balance: 1202500, matched: false },
-      { id: 'B7', date: '2024-01-20', description: 'INTEREST CREDITED', reference: 'INT-Q3', debit: 0, credit: 8500, balance: 1211000, matched: false },
-    ]);
-
-    // Mock ledger entries
-    setLedgerEntries([
-      { id: 'L1', date: '2024-01-04', voucher_number: 'PMT-2024-0012', narration: 'Payment to Sharma Engineering Works - PI-2024-0078', debit: 0, credit: 125000, party_name: 'Sharma Engineering Works', matched: true, matched_to: 'B1' },
-      { id: 'L2', date: '2024-01-07', voucher_number: 'RCV-2024-0008', narration: 'Receipt from XYZ Traders - SI-2024-0045', debit: 250000, credit: 0, party_name: 'XYZ Traders', matched: true, matched_to: 'B2' },
-      { id: 'L3', date: '2024-01-09', voucher_number: 'PMT-2024-0015', narration: 'Payment to Kumar Consultants - SI-2024-0052', debit: 0, credit: 85000, party_name: 'Kumar Consultants', matched: false },
-      { id: 'L4', date: '2024-01-14', voucher_number: 'RCV-2024-0011', narration: 'Receipt from ABC Corporation', debit: 180000, credit: 0, party_name: 'ABC Corporation', matched: true, matched_to: 'B5' },
-      { id: 'L5', date: '2024-01-16', voucher_number: 'PMT-2024-0018', narration: 'Payment to Ravi Transport', debit: 0, credit: 45000, party_name: 'Ravi Transport', matched: false },
-    ]);
-
-    // Calculate summary
-    setSummary({
-      bank_balance: 1211000,
-      book_balance: 1196000,
-      unmatched_bank: 4,
-      unmatched_book: 2,
-      matched_count: 3,
-      total_entries: 7,
-    });
+    loadReconciliation();
   }, [selectedBank, statementDate]);
+
+  const loadReconciliation = async () => {
+    try {
+      const result = await (window as any).electronAPI.finance.getBankReconciliation(selectedBank, statementDate);
+      if (result.success && result.data) {
+        setBankEntries(result.data.bankEntries);
+        setLedgerEntries(result.data.ledgerEntries);
+        setSummary(result.data.summary);
+      }
+    } catch {
+      // fallback - keep empty
+    }
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -226,7 +211,7 @@ export default function BankReconciliation() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4">
           <p className="text-sm text-gray-500">Bank Balance</p>
           <p className="text-xl font-bold text-gray-800">{formatCurrency(summary.bank_balance)}</p>

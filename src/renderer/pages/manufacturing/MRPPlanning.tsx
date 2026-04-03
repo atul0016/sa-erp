@@ -65,105 +65,18 @@ export default function MRPPlanning() {
   const [runProgress, setRunProgress] = useState(0);
 
   useEffect(() => {
-    // Mock MRP runs
-    setMrpRuns([
-      {
-        id: '1',
-        run_number: 'MRP-2024-001',
-        run_date: '2024-01-15',
-        planning_horizon_days: 30,
-        status: 'completed',
-        items_planned: 156,
-        purchase_suggestions: 45,
-        production_suggestions: 28,
-        created_by: 'Admin',
-      },
-      {
-        id: '2',
-        run_number: 'MRP-2024-002',
-        run_date: '2024-01-10',
-        planning_horizon_days: 30,
-        status: 'completed',
-        items_planned: 142,
-        purchase_suggestions: 38,
-        production_suggestions: 22,
-        created_by: 'Admin',
-      },
-    ]);
-
-    // Mock planned orders
-    setPlannedOrders([
-      {
-        id: '1',
-        item_code: 'RM-STEEL-001',
-        item_name: 'Mild Steel Rod 12mm',
-        order_type: 'purchase',
-        required_date: '2024-01-25',
-        order_date: '2024-01-18',
-        quantity: 500,
-        uom: 'Kg',
-        source: 'Sharma Steel Suppliers',
-        priority: 'high',
-        status: 'suggested',
-        demand_source: 'PO-2024-0125',
-      },
-      {
-        id: '2',
-        item_code: 'RM-ALUM-002',
-        item_name: 'Aluminum Sheet 2mm',
-        order_type: 'purchase',
-        required_date: '2024-01-28',
-        order_date: '2024-01-20',
-        quantity: 200,
-        uom: 'Kg',
-        source: 'Metal World',
-        priority: 'medium',
-        status: 'suggested',
-        demand_source: 'PO-2024-0126',
-      },
-      {
-        id: '3',
-        item_code: 'COMP-SHAFT-001',
-        item_name: 'Drive Shaft Assembly',
-        order_type: 'production',
-        required_date: '2024-01-30',
-        order_date: '2024-01-22',
-        quantity: 50,
-        uom: 'Nos',
-        source: 'BOM-SHAFT-001',
-        priority: 'high',
-        status: 'suggested',
-        demand_source: 'SO-2024-0089',
-      },
-      {
-        id: '4',
-        item_code: 'RM-BEAR-003',
-        item_name: 'Ball Bearing 6205',
-        order_type: 'purchase',
-        required_date: '2024-01-22',
-        order_date: '2024-01-15',
-        quantity: 100,
-        uom: 'Nos',
-        source: 'SKF Distributors',
-        priority: 'critical',
-        status: 'suggested',
-        demand_source: 'Safety Stock',
-      },
-      {
-        id: '5',
-        item_code: 'FG-PUMP-001',
-        item_name: 'Centrifugal Pump Model A',
-        order_type: 'production',
-        required_date: '2024-02-05',
-        order_date: '2024-01-25',
-        quantity: 25,
-        uom: 'Nos',
-        source: 'BOM-PUMP-001',
-        priority: 'medium',
-        status: 'suggested',
-        demand_source: 'SO-2024-0092',
-      },
-    ]);
+    const loadMRPData = async () => {
+      try {
+        const result = await (window as any).electronAPI.manufacturing.getMRPRuns();
+        if (result?.success) {
+          setMrpRuns(result.data.runs || []);
+          setPlannedOrders(result.data.plannedOrders || []);
+        }
+      } catch (error) {
+        console.error('Failed to load MRP data:', error);
+      }
+    };
+    loadMRPData();
   }, []);
 
   const formatDate = (dateStr: string) => {
@@ -256,7 +169,7 @@ export default function MRPPlanning() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">

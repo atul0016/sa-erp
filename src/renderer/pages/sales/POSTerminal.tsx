@@ -57,16 +57,20 @@ export default function POSTerminal() {
   const [isOffline, setIsOffline] = useState(false);
   const [redeemPoints, setRedeemPoints] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [products, setProducts] = useState<any[]>([]);
 
-  // Products mock data
-  const products = [
-    { id: '1', sku: 'SKU001', name: 'Product A', barcode: '8901234567890', price: 499, gst_rate: 18, hsn_code: '8471' },
-    { id: '2', sku: 'SKU002', name: 'Product B', barcode: '8901234567891', price: 299, gst_rate: 12, hsn_code: '8472' },
-    { id: '3', sku: 'SKU003', name: 'Product C', barcode: '8901234567892', price: 799, gst_rate: 18, hsn_code: '8473' },
-    { id: '4', sku: 'SKU004', name: 'Product D', barcode: '8901234567893', price: 149, gst_rate: 5, hsn_code: '8474' },
-    { id: '5', sku: 'SKU005', name: 'Product E', barcode: '8901234567894', price: 1299, gst_rate: 18, hsn_code: '8475' },
-    { id: '6', sku: 'SKU006', name: 'Product F', barcode: '8901234567895', price: 599, gst_rate: 12, hsn_code: '8476' },
-  ];
+  // Load products from API
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const result = await (window as any).electronAPI.sales.getPOSProducts();
+        if (result?.success) setProducts(result.data);
+      } catch (error) {
+        console.error('Failed to load POS products:', error);
+      }
+    };
+    loadProducts();
+  }, []);
 
   // Focus search on mount and keyboard shortcut
   useEffect(() => {
@@ -218,7 +222,7 @@ export default function POSTerminal() {
 
         {/* Product Grid */}
         <div className="flex-1 p-4 overflow-y-auto">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products
               .filter(p => 
                 searchQuery === '' || 

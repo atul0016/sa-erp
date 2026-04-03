@@ -68,129 +68,20 @@ export default function CreditLimitManagement() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    // Mock customer credit data
-    setCustomers([
-      {
-        id: '1',
-        customer_code: 'CUST001',
-        customer_name: 'ABC Engineering Pvt Ltd',
-        gstin: '27AABCA1234M1Z5',
-        credit_limit: 500000,
-        current_outstanding: 385000,
-        overdue_amount: 0,
-        utilization_percent: 77,
-        days_overdue: 0,
-        payment_terms: 30,
-        last_payment_date: '2024-01-10',
-        average_days_to_pay: 28,
-        credit_rating: 'A',
-        risk_status: 'low',
-        hold_status: false,
-      },
-      {
-        id: '2',
-        customer_code: 'CUST002',
-        customer_name: 'XYZ Industries Ltd',
-        gstin: '27AABCX5678N1Z8',
-        credit_limit: 750000,
-        current_outstanding: 680000,
-        overdue_amount: 125000,
-        utilization_percent: 91,
-        days_overdue: 15,
-        payment_terms: 45,
-        last_payment_date: '2023-12-20',
-        average_days_to_pay: 52,
-        credit_rating: 'B',
-        risk_status: 'medium',
-        hold_status: false,
-      },
-      {
-        id: '3',
-        customer_code: 'CUST003',
-        customer_name: 'PQR Manufacturing Co',
-        gstin: '27AABCP9012K1Z2',
-        credit_limit: 300000,
-        current_outstanding: 320000,
-        overdue_amount: 180000,
-        utilization_percent: 107,
-        days_overdue: 45,
-        payment_terms: 30,
-        last_payment_date: '2023-11-25',
-        average_days_to_pay: 68,
-        credit_rating: 'D',
-        risk_status: 'high',
-        hold_status: true,
-      },
-      {
-        id: '4',
-        customer_code: 'CUST004',
-        customer_name: 'DEF Traders',
-        gstin: '27AABCD3456L1Z9',
-        credit_limit: 200000,
-        current_outstanding: 45000,
-        overdue_amount: 0,
-        utilization_percent: 23,
-        days_overdue: 0,
-        payment_terms: 15,
-        last_payment_date: '2024-01-12',
-        average_days_to_pay: 12,
-        credit_rating: 'A',
-        risk_status: 'low',
-        hold_status: false,
-      },
-      {
-        id: '5',
-        customer_code: 'CUST005',
-        customer_name: 'LMN Steel Works',
-        gstin: '27AABCL7890M1Z3',
-        credit_limit: 450000,
-        current_outstanding: 390000,
-        overdue_amount: 45000,
-        utilization_percent: 87,
-        days_overdue: 8,
-        payment_terms: 30,
-        last_payment_date: '2024-01-05',
-        average_days_to_pay: 35,
-        credit_rating: 'B',
-        risk_status: 'medium',
-        hold_status: false,
-      },
-    ]);
-
-    // Mock credit limit requests
-    setRequests([
-      {
-        id: '1',
-        customer_name: 'ABC Engineering Pvt Ltd',
-        current_limit: 500000,
-        requested_limit: 750000,
-        requested_by: 'Sales Manager',
-        requested_date: '2024-01-14',
-        status: 'pending',
-        remarks: 'Large project order expected',
-      },
-      {
-        id: '2',
-        customer_name: 'DEF Traders',
-        current_limit: 200000,
-        requested_limit: 350000,
-        requested_by: 'Account Executive',
-        requested_date: '2024-01-12',
-        status: 'approved',
-        remarks: 'Good payment history',
-      },
-      {
-        id: '3',
-        customer_name: 'GHI Enterprises',
-        current_limit: 300000,
-        requested_limit: 500000,
-        requested_by: 'Regional Head',
-        requested_date: '2024-01-10',
-        status: 'rejected',
-        remarks: 'Recent payment delays',
-      },
-    ]);
+    loadCreditData();
   }, []);
+
+  const loadCreditData = async () => {
+    try {
+      const result = await (window as any).electronAPI.finance.getCreditLimits();
+      if (result.success && result.data) {
+        setCustomers(result.data.customers);
+        setRequests(result.data.requests);
+      }
+    } catch {
+      // fallback - keep empty
+    }
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -276,7 +167,7 @@ export default function CreditLimitManagement() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">
@@ -542,7 +433,7 @@ export default function CreditLimitManagement() {
         {/* Aging Tab */}
         {activeTab === 'aging' && (
           <div className="p-6">
-            <div className="grid grid-cols-5 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
               {[
                 { label: '0-30 Days', amount: 850000, count: 12, color: 'bg-green-500' },
                 { label: '31-60 Days', amount: 320000, count: 5, color: 'bg-yellow-500' },
