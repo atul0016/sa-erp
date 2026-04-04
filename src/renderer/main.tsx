@@ -134,7 +134,7 @@ if (!window.electronAPI) {
       first_name: 'Rajesh',
       last_name: 'Sharma',
       roles: '["ceo"]',
-      password: 'ceo123',
+      password: 'ceo12345',
     },
     sales_mgr: {
       id: 'mock-sales-id',
@@ -158,7 +158,7 @@ if (!window.electronAPI) {
       first_name: 'Vikram',
       last_name: 'Patel',
       roles: '["accountant"]',
-      password: 'acc123',
+      password: 'acc12345',
     },
     viewer: {
       id: 'mock-viewer-id',
@@ -170,7 +170,7 @@ if (!window.electronAPI) {
       first_name: 'Amit',
       last_name: 'Singh',
       roles: '["viewer"]',
-      password: 'view123',
+      password: 'view1234',
     },
     hr_mgr: {
       id: 'mock-hr-id',
@@ -182,7 +182,7 @@ if (!window.electronAPI) {
       first_name: 'Kavita',
       last_name: 'Desai',
       roles: '["hr_manager"]',
-      password: 'hr123',
+      password: 'hrm12345',
     },
   };
 

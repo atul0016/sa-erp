@@ -6,11 +6,11 @@ import { EyeIcon, EyeSlashIcon, ShieldCheckIcon } from '@heroicons/react/24/outl
 
 const DEMO_ROLES = [
   { label: 'Admin', username: 'admin', password: 'admin123' },
-  { label: 'CEO', username: 'ceo', password: 'ceo123' },
+  { label: 'CEO', username: 'ceo', password: 'ceo12345' },
   { label: 'Sales Manager', username: 'sales_mgr', password: 'sales123' },
-  { label: 'Accountant', username: 'accountant', password: 'acc123' },
-  { label: 'HR Manager', username: 'hr_mgr', password: 'hr123' },
-  { label: 'Viewer', username: 'viewer', password: 'view123' },
+  { label: 'Accountant', username: 'accountant', password: 'acc12345' },
+  { label: 'HR Manager', username: 'hr_mgr', password: 'hrm12345' },
+  { label: 'Viewer', username: 'viewer', password: 'view1234' },
 ];
 
 export function Login() {
