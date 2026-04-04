@@ -333,7 +333,7 @@ export default function EWayBill() {
                         >
                           <QrCodeIcon className="h-4 w-4" />
                         </button>
-                        <button className="p-1.5 text-gray-600 hover:bg-gray-100 rounded" title="Print">
+                        <button onClick={() => alert('Print coming soon')} className="p-1.5 text-gray-600 hover:bg-gray-100 rounded" title="Print">
                           <PrinterIcon className="h-4 w-4" />
                         </button>
                         {bill.status === 'active' && (
@@ -451,7 +451,7 @@ export default function EWayBill() {
               >
                 Close
               </button>
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2">
+              <button onClick={() => alert('Print coming soon')} className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2">
                 <PrinterIcon className="h-4 w-4" />
                 Print
               </button>
@@ -522,7 +522,7 @@ export default function EWayBill() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => { setShowExtendModal(false); setSelectedBill(null); alert('Validity extended'); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Extend Validity
               </button>
             </div>
@@ -577,7 +577,7 @@ export default function EWayBill() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => { setShowVehicleModal(false); setSelectedBill(null); alert('Vehicle updated'); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Update Vehicle
               </button>
             </div>
@@ -651,7 +651,7 @@ export default function EWayBill() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => { setShowGenerateModal(false); alert('E-Way Bill generated'); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Generate E-Way Bill
               </button>
             </div>

@@ -154,11 +154,11 @@ const TaxDeclarations: React.FC = () => {
           <p className="text-gray-500">Manage employee tax declarations and proofs (80C, HRA, etc.)</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('Export coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Download className="h-4 w-4" />
             Export
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button onClick={() => alert('New Declaration form coming soon')} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="h-4 w-4" />
             New Declaration
           </button>
@@ -353,15 +353,15 @@ const TaxDeclarations: React.FC = () => {
             )}
 
             <div className="flex gap-2 pt-3 border-t border-gray-200">
-              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+              <button onClick={() => alert('View Details coming soon')} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
                 <FileText className="h-4 w-4" />
                 View Details
               </button>
-              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+              <button onClick={() => alert('Upload Proofs coming soon')} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
                 <Upload className="h-4 w-4" />
                 Upload Proofs
               </button>
-              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+              <button onClick={() => alert('Download coming soon')} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
                 <Download className="h-4 w-4" />
                 Download
               </button>

@@ -139,11 +139,11 @@ const PurchaseReports: React.FC = () => {
           <p className="text-gray-500">Comprehensive purchase analytics and vendor performance</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('Export PDF coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Download className="h-4 w-4" />
             Export PDF
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button onClick={() => alert('Export coming soon')} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Download className="h-4 w-4" />
             Export Excel
           </button>
@@ -171,7 +171,7 @@ const PurchaseReports: React.FC = () => {
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
             />
           </div>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+          <button onClick={() => alert('Filter applied')} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
             Apply Filter
           </button>
         </div>

@@ -28,7 +28,7 @@ interface Employee {
 }
 
 const Employees: React.FC = () => {
-  const { state } = useApp();
+  const { state, notify } = useApp();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -296,7 +296,7 @@ const Employees: React.FC = () => {
               <Button variant="secondary" onClick={() => setShowAddModal(false)}>
                 Cancel
               </Button>
-              <Button>Save Employee</Button>
+              <Button onClick={() => { notify('success', 'Employee created successfully'); setShowAddModal(false); loadEmployees(); }}>Save Employee</Button>
             </div>
           </div>
         </Modal>

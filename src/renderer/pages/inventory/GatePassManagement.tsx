@@ -313,7 +313,7 @@ export default function GatePassManagement() {
 
             {/* Actions */}
             <div className="flex justify-end gap-3">
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-50">
+              <button onClick={() => alert('Print Gate Pass coming soon')} className="px-4 py-2 border rounded-lg hover:bg-gray-50">
                 Print Gate Pass
               </button>
               {selectedPass.type === 'RGP' && ['dispatched', 'partial_return', 'overdue'].includes(selectedPass.status) && (
@@ -451,7 +451,7 @@ export default function GatePassManagement() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => setShowNewModal(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Create & Add Items
               </button>
             </div>

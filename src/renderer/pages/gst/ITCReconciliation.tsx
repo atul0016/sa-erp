@@ -197,15 +197,15 @@ const ITCReconciliation: React.FC = () => {
           <p className="text-gray-500">Reconcile Input Tax Credit with GSTR-2A/2B data</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('GSTR-2A import coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Upload className="h-4 w-4" />
             Import GSTR-2A
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('Export coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Download className="h-4 w-4" />
             Export Report
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button onClick={() => alert('Reconciliation started')} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <ArrowRightLeft className="h-4 w-4" />
             Run Reconciliation
           </button>
@@ -345,10 +345,10 @@ const ITCReconciliation: React.FC = () => {
           <div className="flex gap-2">
             {selectedRecords.length > 0 && (
               <>
-                <button className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
+                <button onClick={() => { alert(`${selectedRecords.length} record(s) marked as claim`); setSelectedRecords([]); }} className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
                   Mark as Claim ({selectedRecords.length})
                 </button>
-                <button className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700">
+                <button onClick={() => { alert(`${selectedRecords.length} record(s) put on hold`); setSelectedRecords([]); }} className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700">
                   Hold Selected
                 </button>
               </>

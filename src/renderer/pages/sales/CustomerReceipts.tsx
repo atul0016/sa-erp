@@ -188,7 +188,7 @@ const CustomerReceipts: React.FC = () => {
           <p className="text-gray-500">Track and manage customer payments and TDS</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('Export coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Download className="h-4 w-4" />
             Export
           </button>
@@ -389,7 +389,7 @@ const CustomerReceipts: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-center">
-                      <button className="p-1 text-gray-400 hover:text-blue-600">
+                      <button onClick={() => alert('Print coming soon')} className="p-1 text-gray-400 hover:text-blue-600">
                         <Printer className="h-4 w-4" />
                       </button>
                     </td>
@@ -547,6 +547,51 @@ const CustomerReceipts: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* New Receipt Modal */}
+      {showNewModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-full max-w-lg p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">New Customer Receipt</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Customer</label>
+                <select className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                  <option value="">Select Customer</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Receipt Date</label>
+                  <input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="w-full px-4 py-2 border rounded-lg" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                  <input type="number" placeholder="0.00" className="w-full px-4 py-2 border rounded-lg" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Payment Mode</label>
+                <select className="w-full px-4 py-2 border rounded-lg">
+                  <option value="NEFT/RTGS">NEFT/RTGS</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Cash">Cash</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Card">Card</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Reference / UTR No.</label>
+                <input type="text" placeholder="Transaction reference" className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowNewModal(false)} className="px-4 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
+              <button onClick={() => { notify('success', 'Receipt created successfully'); setShowNewModal(false); loadCustomerReceipts(); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Create Receipt</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

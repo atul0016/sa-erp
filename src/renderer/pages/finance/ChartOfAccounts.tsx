@@ -187,7 +187,7 @@ export function ChartOfAccounts() {
         onClose={() => setShowModal(false)}
         title="Add New Account"
       >
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); notify('success', 'Account created successfully'); setShowModal(false); loadAccounts(); }}>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
               Account Code

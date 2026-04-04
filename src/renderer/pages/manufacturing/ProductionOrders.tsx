@@ -52,7 +52,7 @@ interface MaterialRequirement {
 }
 
 const ProductionOrders: React.FC = () => {
-  const { state } = useApp();
+  const { state, notify } = useApp();
   const [orders, setOrders] = useState<ProductionOrder[]>([]);
   const [materials, setMaterials] = useState<MaterialRequirement[]>([]);
   const [loading, setLoading] = useState(true);
@@ -260,7 +260,7 @@ const ProductionOrders: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Production Orders</h1>
           <p className="text-gray-600">Manage manufacturing and assembly operations</p>
         </div>
-        <Button>
+        <Button onClick={() => notify('info', 'Production order creation coming soon')}>
           <PlusIcon className="h-5 w-5 mr-2" />
           New Production Order
         </Button>

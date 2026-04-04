@@ -83,6 +83,23 @@ export const itemsCrud     = createCRUD(COLLECTIONS.ITEMS);
 export const accountsCrud  = createCRUD(COLLECTIONS.ACCOUNTS);
 export const employeesCrud = createCRUD(COLLECTIONS.EMPLOYEES);
 export const warehousesCrud = createCRUD(COLLECTIONS.WAREHOUSES);
+export const salesOrdersCrud = createCRUD(COLLECTIONS.SALES_ORDERS);
+export const salesInvoicesCrud = createCRUD(COLLECTIONS.SALES_INVOICES);
+export const purchaseOrdersCrud = createCRUD(COLLECTIONS.PURCHASE_ORDERS);
+export const purchaseInvoicesCrud = createCRUD(COLLECTIONS.PURCHASE_INVOICES);
+export const journalEntriesCrud = createCRUD(COLLECTIONS.JOURNAL_ENTRIES);
+export const attendanceCrud = createCRUD(COLLECTIONS.ATTENDANCE);
+export const leavesCrud = createCRUD(COLLECTIONS.LEAVES);
+export const payrollCrud = createCRUD(COLLECTIONS.PAYROLL);
+export const taxDeclarationsCrud = createCRUD(COLLECTIONS.TAX_DECLARATIONS);
+export const bomsCrud = createCRUD(COLLECTIONS.BOMS);
+export const productionOrdersCrud = createCRUD(COLLECTIONS.PRODUCTION_ORDERS);
+export const workCentersCrud = createCRUD(COLLECTIONS.WORK_CENTERS);
+export const qcInspectionsCrud = createCRUD(COLLECTIONS.QC_INSPECTIONS);
+export const jobWorkChallansCrud = createCRUD(COLLECTIONS.JOB_WORK_CHALLANS);
+export const gatePassesCrud = createCRUD(COLLECTIONS.GATE_PASSES);
+export const stockMovementsCrud = createCRUD(COLLECTIONS.STOCK_MOVEMENTS);
+export const notificationsCrud = createCRUD(COLLECTIONS.NOTIFICATIONS);
 
 // ---------------------------------------------------------------------------
 // Module-specific query builders

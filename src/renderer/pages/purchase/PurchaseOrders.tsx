@@ -54,7 +54,7 @@ interface POItem {
 }
 
 const PurchaseOrders: React.FC = () => {
-  const { state } = useApp();
+  const { state, notify } = useApp();
   const [orders, setOrders] = useState<PurchaseOrder[]>([]);
   const [poItems, setPOItems] = useState<POItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -218,7 +218,7 @@ const PurchaseOrders: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
           <p className="text-gray-600">Manage purchase orders and track deliveries</p>
         </div>
-        <Button>
+        <Button onClick={() => notify('info', 'Purchase Order creation coming soon')}>
           <PlusIcon className="h-5 w-5 mr-2" />
           New Purchase Order
         </Button>

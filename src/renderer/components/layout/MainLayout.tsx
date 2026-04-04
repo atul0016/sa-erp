@@ -9,20 +9,16 @@ import { useApp } from '../../context';
 export function MainLayout() {
   const { state, dispatch } = useApp();
 
-  // Auto-close sidebar on mobile when navigating
+  // Close sidebar when resizing to mobile
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 1024 && state.sidebarOpen) {
-        dispatch({ type: 'TOGGLE_SIDEBAR' });
+      if (window.innerWidth < 1024) {
+        dispatch({ type: 'SET_SIDEBAR', payload: false });
       }
     };
-    // Only run on mount for initial mobile detection
-    if (window.innerWidth < 1024 && state.sidebarOpen) {
-      dispatch({ type: 'TOGGLE_SIDEBAR' });
-    }
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <div className={`flex min-h-screen ${state.theme === 'dark' ? 'dark' : ''}`}>

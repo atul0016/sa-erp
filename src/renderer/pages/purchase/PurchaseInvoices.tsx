@@ -275,6 +275,46 @@ export function PurchaseInvoices() {
           </div>
         </div>
       </Card>
+
+      {/* New Invoice Modal */}
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title="New Purchase Invoice"
+      >
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); notify('success', 'Invoice created successfully'); setShowModal(false); loadInvoices(); }}>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Vendor</label>
+              <select className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600">
+                <option value="">Select Vendor</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Vendor Invoice No.</label>
+              <input type="text" placeholder="Vendor invoice reference" className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Invoice Date</label>
+              <input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Due Date</label>
+              <input type="date" className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">PO Reference</label>
+            <input type="text" placeholder="Linked PO number" className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+          </div>
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button type="submit">Create Invoice</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

@@ -34,6 +34,7 @@ type AppAction =
   | { type: 'SET_MODULE'; payload: string }
   | { type: 'SET_FISCAL_YEAR'; payload: string }
   | { type: 'TOGGLE_SIDEBAR' }
+  | { type: 'SET_SIDEBAR'; payload: boolean }
   | { type: 'SET_THEME'; payload: 'light' | 'dark' }
   | { type: 'ADD_NOTIFICATION'; payload: { type: 'success' | 'error' | 'warning' | 'info'; message: string } }
   | { type: 'REMOVE_NOTIFICATION'; payload: string };
@@ -44,7 +45,7 @@ const initialState: AppState = {
   isLoading: true,
   currentModule: 'dashboard',
   fiscalYear: getCurrentFiscalYear(),
-  sidebarOpen: true,
+  sidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
   theme: 'light',
   notifications: [],
 };
@@ -83,6 +84,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, fiscalYear: action.payload };
     case 'TOGGLE_SIDEBAR':
       return { ...state, sidebarOpen: !state.sidebarOpen };
+    case 'SET_SIDEBAR':
+      return { ...state, sidebarOpen: action.payload };
     case 'SET_THEME':
       localStorage.setItem('theme', action.payload);
       return { ...state, theme: action.payload };

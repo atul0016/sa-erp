@@ -317,11 +317,11 @@ export default function JobWorkChallan() {
                     <td className="px-4 py-3 text-center">{getStatusBadge(summary.status)}</td>
                     <td className="px-4 py-3 text-center">
                       {summary.status === 'pending' ? (
-                        <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                        <button onClick={() => alert('Generate ITC-04 coming soon')} className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
                           Generate ITC-04
                         </button>
                       ) : (
-                        <button className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
+                        <button onClick={() => alert('View coming soon')} className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
                           View
                         </button>
                       )}
@@ -413,7 +413,7 @@ export default function JobWorkChallan() {
               >
                 Close
               </button>
-              <button className="px-4 py-2 border rounded-lg hover:bg-gray-50">
+              <button onClick={() => alert('Print Challan coming soon')} className="px-4 py-2 border rounded-lg hover:bg-gray-50">
                 Print Challan
               </button>
               {['dispatched', 'partial_return', 'overdue'].includes(selectedChallan.status) && (
@@ -475,7 +475,7 @@ export default function JobWorkChallan() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+              <button onClick={() => alert('Confirm Receipt coming soon')} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                 Confirm Receipt
               </button>
             </div>
@@ -527,7 +527,7 @@ export default function JobWorkChallan() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => setShowNewChallanModal(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Create & Add Items
               </button>
             </div>

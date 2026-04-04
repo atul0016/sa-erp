@@ -156,10 +156,10 @@ export function SalesInvoices() {
     )},
     { key: 'actions', header: '', render: (row: SalesInvoice) => (
       <div className="flex gap-2">
-        <button className="p-1 hover:bg-slate-100 rounded dark:hover:bg-slate-700">
+        <button onClick={() => alert('View Invoice coming soon')} className="p-1 hover:bg-slate-100 rounded dark:hover:bg-slate-700">
           <EyeIcon className="w-4 h-4 text-slate-500" />
         </button>
-        <button className="p-1 hover:bg-slate-100 rounded dark:hover:bg-slate-700">
+        <button onClick={() => alert('Print Invoice coming soon')} className="p-1 hover:bg-slate-100 rounded dark:hover:bg-slate-700">
           <PrinterIcon className="w-4 h-4 text-slate-500" />
         </button>
       </div>
@@ -181,7 +181,7 @@ export function SalesInvoices() {
             <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button onClick={() => navigate('/sales/invoices/new')}>
+          <Button onClick={() => notify('info', 'Invoice creation coming soon')}>
             <PlusIcon className="w-4 h-4 mr-2" />
             New Invoice
           </Button>

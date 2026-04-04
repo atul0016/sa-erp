@@ -403,10 +403,10 @@ const GoodsReceiptNote: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-1 text-gray-400 hover:text-blue-600" title="View">
+                        <button onClick={() => alert('View GRN coming soon')} className="p-1 text-gray-400 hover:text-blue-600" title="View">
                           <FileText className="h-4 w-4" />
                         </button>
-                        <button className="p-1 text-gray-400 hover:text-green-600" title="Print">
+                        <button onClick={() => alert('Print GRN coming soon')} className="p-1 text-gray-400 hover:text-green-600" title="Print">
                           <Download className="h-4 w-4" />
                         </button>
                       </div>

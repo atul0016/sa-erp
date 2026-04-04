@@ -176,11 +176,12 @@ const LowStockAlerts: React.FC = () => {
           <p className="text-gray-500">Monitor items below reorder level and generate purchase orders</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('Set Alert Rules coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Bell className="h-4 w-4" />
             Set Alert Rules
           </button>
           <button
+            onClick={() => alert('Generate PO coming soon')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
               selectedItems.length > 0
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -320,11 +321,11 @@ const LowStockAlerts: React.FC = () => {
             </select>
           </div>
           <div className="ml-auto flex gap-2">
-            <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+            <button onClick={() => alert('Email Report coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
               <Mail className="h-4 w-4" />
               Email Report
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+            <button onClick={() => alert('Export coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
               <Download className="h-4 w-4" />
               Export
             </button>
@@ -457,14 +458,14 @@ const LowStockAlerts: React.FC = () => {
         <div className="bg-white border border-gray-200 rounded-xl p-4">
           <h3 className="font-semibold text-gray-900 mb-3">Quick Actions</h3>
           <div className="space-y-2">
-            <button className="w-full text-left px-4 py-3 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 flex items-center gap-3">
+            <button onClick={() => alert('Auto Generate PO coming soon')} className="w-full text-left px-4 py-3 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 flex items-center gap-3">
               <ShoppingCart className="h-5 w-5" />
               <div>
                 <div className="font-medium">Auto Generate PO</div>
                 <div className="text-xs text-blue-600">Create PO for all critical items</div>
               </div>
             </button>
-            <button className="w-full text-left px-4 py-3 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center gap-3">
+            <button onClick={() => alert('Notify Suppliers coming soon')} className="w-full text-left px-4 py-3 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 flex items-center gap-3">
               <Mail className="h-5 w-5" />
               <div>
                 <div className="font-medium">Notify Suppliers</div>

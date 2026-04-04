@@ -6,6 +6,10 @@ import { isAppwriteConfigured } from './services/appwrite';
 import { appwriteLogin, appwriteLogout, appwriteGetCurrentUser } from './services/auth';
 import {
   customersCrud, vendorsCrud, itemsCrud, accountsCrud, employeesCrud, warehousesCrud,
+  salesOrdersCrud, salesInvoicesCrud, purchaseOrdersCrud, purchaseInvoicesCrud,
+  journalEntriesCrud, attendanceCrud, leavesCrud, payrollCrud, taxDeclarationsCrud,
+  bomsCrud, productionOrdersCrud, workCentersCrud, qcInspectionsCrud,
+  jobWorkChallansCrud, gatePassesCrud, stockMovementsCrud,
   getDashboardData, getApprovals, updateApprovalStatus, getActivityFeed,
 } from './services/database';
 import { initFirebase, isFirebaseConfigured, requestNotificationPermission, onForegroundMessage } from './services/firebase';
@@ -31,9 +35,12 @@ if (isAppwriteConfigured() && !window.electronAPI) {
     } catch { return ''; }
   };
 
-  const proxyFallback = new Proxy({}, {
-    get: () => async () => ({ success: true, data: [] }),
-  });
+  // Wrap an object so any undefined method gracefully returns { success: true, data: [] }
+  const withFallback = <T extends Record<string, any>>(obj: T): T =>
+    new Proxy(obj, {
+      get: (target, prop) =>
+        prop in target ? target[prop as string] : async () => ({ success: true, data: [] }),
+    }) as T;
 
   (window as any).electronAPI = {
     auth: {
@@ -44,42 +51,74 @@ if (isAppwriteConfigured() && !window.electronAPI) {
         return user ? { success: true, data: user } : { success: false, error: 'No session' };
       },
     },
-    dashboard: {
+    dashboard: withFallback({
       getData: async () => getDashboardData(tenantId()),
-    },
-    sales: {
+      getStats: async () => getDashboardData(tenantId()),
+      getRecentTransactions: async () => ({ success: true, data: [] }),
+    }),
+    sales: withFallback({
       getCustomers: async () => customersCrud.getAll(tenantId()),
       getCustomerById: async (id: string) => customersCrud.getById(id),
       createCustomer: async (data: any) => customersCrud.create({ ...data, tenant_id: tenantId() }),
       updateCustomer: async (id: string, data: any) => customersCrud.update(id, data),
       deleteCustomer: async (id: string) => customersCrud.delete(id),
-      ...proxyFallback,
-    },
-    purchase: {
+      getSalesOrders: async () => salesOrdersCrud.getAll(tenantId()),
+      getSalesOrderById: async (id: string) => salesOrdersCrud.getById(id),
+      createSalesOrder: async (data: any) => salesOrdersCrud.create({ ...data, tenant_id: tenantId() }),
+      updateSalesOrder: async (id: string, data: any) => salesOrdersCrud.update(id, data),
+      deleteSalesOrder: async (id: string) => salesOrdersCrud.delete(id),
+      getSalesInvoices: async () => salesInvoicesCrud.getAll(tenantId()),
+      getSalesInvoiceById: async (id: string) => salesInvoicesCrud.getById(id),
+      createSalesInvoice: async (data: any) => salesInvoicesCrud.create({ ...data, tenant_id: tenantId() }),
+      updateSalesInvoice: async (id: string, data: any) => salesInvoicesCrud.update(id, data),
+      deleteSalesInvoice: async (id: string) => salesInvoicesCrud.delete(id),
+      getPOSProducts: async () => itemsCrud.getAll(tenantId()),
+    }),
+    purchase: withFallback({
       getVendors: async () => vendorsCrud.getAll(tenantId()),
       getVendorById: async (id: string) => vendorsCrud.getById(id),
       createVendor: async (data: any) => vendorsCrud.create({ ...data, tenant_id: tenantId() }),
       updateVendor: async (id: string, data: any) => vendorsCrud.update(id, data),
       deleteVendor: async (id: string) => vendorsCrud.delete(id),
-      ...proxyFallback,
-    },
-    inventory: {
+      getPurchaseOrders: async () => purchaseOrdersCrud.getAll(tenantId()),
+      getPurchaseOrderById: async (id: string) => purchaseOrdersCrud.getById(id),
+      createPurchaseOrder: async (data: any) => purchaseOrdersCrud.create({ ...data, tenant_id: tenantId() }),
+      updatePurchaseOrder: async (id: string, data: any) => purchaseOrdersCrud.update(id, data),
+      deletePurchaseOrder: async (id: string) => purchaseOrdersCrud.delete(id),
+      getPurchaseInvoices: async () => purchaseInvoicesCrud.getAll(tenantId()),
+      getPurchaseInvoiceById: async (id: string) => purchaseInvoicesCrud.getById(id),
+      createPurchaseInvoice: async (data: any) => purchaseInvoicesCrud.create({ ...data, tenant_id: tenantId() }),
+      updatePurchaseInvoice: async (id: string, data: any) => purchaseInvoicesCrud.update(id, data),
+      deletePurchaseInvoice: async (id: string) => purchaseInvoicesCrud.delete(id),
+    }),
+    inventory: withFallback({
       getItems: async () => itemsCrud.getAll(tenantId()),
       getItemById: async (id: string) => itemsCrud.getById(id),
       createItem: async (data: any) => itemsCrud.create({ ...data, tenant_id: tenantId() }),
       updateItem: async (id: string, data: any) => itemsCrud.update(id, data),
       deleteItem: async (id: string) => itemsCrud.delete(id),
       getWarehouses: async () => warehousesCrud.getAll(tenantId()),
-      ...proxyFallback,
-    },
-    finance: {
+      getStockMovements: async () => stockMovementsCrud.getAll(tenantId()),
+      getGatePasses: async () => gatePassesCrud.getAll(tenantId()),
+    }),
+    finance: withFallback({
       getAccounts: async () => accountsCrud.getAll(tenantId()),
-      ...proxyFallback,
-    },
-    hrm: {
+      getChartOfAccounts: async () => accountsCrud.getAll(tenantId()),
+      getJournalEntries: async () => journalEntriesCrud.getAll(tenantId()),
+      getJournalEntryById: async (id: string) => journalEntriesCrud.getById(id),
+      createJournalEntry: async (data: any) => journalEntriesCrud.create({ ...data, tenant_id: tenantId() }),
+    }),
+    hrm: withFallback({
       getEmployees: async () => employeesCrud.getAll(tenantId()),
-      ...proxyFallback,
-    },
+      getEmployeeById: async (id: string) => employeesCrud.getById(id),
+      createEmployee: async (data: any) => employeesCrud.create({ ...data, tenant_id: tenantId() }),
+      updateEmployee: async (id: string, data: any) => employeesCrud.update(id, data),
+      deleteEmployee: async (id: string) => employeesCrud.delete(id),
+      getAttendanceReport: async () => attendanceCrud.getAll(tenantId()),
+      getLeaves: async () => leavesCrud.getAll(tenantId()),
+      getPayrolls: async () => payrollCrud.getAll(tenantId()),
+      getTaxDeclarations: async () => taxDeclarationsCrud.getAll(tenantId()),
+    }),
     approvals: {
       getPendingApprovals: async () => getApprovals(tenantId(), 'pending'),
       getApprovalHistory: async () => getApprovals(tenantId(), undefined),
@@ -96,10 +135,19 @@ if (isAppwriteConfigured() && !window.electronAPI) {
     notifications: {
       getActivityFeed: async () => getActivityFeed(tenantId()),
     },
-    manufacturing: proxyFallback,
-    gst: proxyFallback,
-    master: proxyFallback,
-    report: proxyFallback,
+    manufacturing: withFallback({
+      getBOMs: async () => bomsCrud.getAll(tenantId()),
+      getProductionOrders: async () => productionOrdersCrud.getAll(tenantId()),
+      getWorkCenters: async () => workCentersCrud.getAll(tenantId()),
+      getJobWorkChallans: async () => jobWorkChallansCrud.getAll(tenantId()),
+      getQCInspections: async () => qcInspectionsCrud.getAll(tenantId()),
+    }),
+    gst: withFallback({}),
+    master: withFallback({
+      getCustomers: async () => customersCrud.getAll(tenantId()),
+      getVendors: async () => vendorsCrud.getAll(tenantId()),
+    }),
+    report: withFallback({}),
     platform: 'web-appwrite',
     versions: { node: 'N/A', chrome: 'N/A', electron: 'N/A' },
   };

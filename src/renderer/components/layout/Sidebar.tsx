@@ -189,14 +189,14 @@ export function Sidebar() {
   const handleChildClick = (parentName: string) => {
     setExpandedItems(prev => prev.filter(n => n !== parentName));
     if (window.innerWidth < 1024) {
-      dispatch({ type: 'TOGGLE_SIDEBAR' });
+      dispatch({ type: 'SET_SIDEBAR', payload: false });
     }
   };
 
   // Close mobile sidebar on top-level link click
   const handleTopLevelClick = () => {
     if (window.innerWidth < 1024) {
-      dispatch({ type: 'TOGGLE_SIDEBAR' });
+      dispatch({ type: 'SET_SIDEBAR', payload: false });
     }
   };
 

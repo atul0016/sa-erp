@@ -175,7 +175,7 @@ export default function TdsManagement() {
             <option value="Q3-2024">Q3 FY 2024-25 (Oct-Dec)</option>
             <option value="Q4-2024">Q4 FY 2024-25 (Jan-Mar)</option>
           </select>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+          <button onClick={() => alert('Form 26Q generation coming soon')} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
             <ArrowDownTrayIcon className="h-5 w-5" />
             Generate Form 26Q
           </button>

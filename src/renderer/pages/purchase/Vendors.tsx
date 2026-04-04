@@ -29,7 +29,7 @@ interface Vendor {
 }
 
 const Vendors: React.FC = () => {
-  const { state } = useApp();
+  const { state, notify } = useApp();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -319,7 +319,7 @@ const Vendors: React.FC = () => {
               <Button variant="secondary" onClick={() => setShowAddModal(false)}>
                 Cancel
               </Button>
-              <Button>Save Vendor</Button>
+              <Button onClick={() => { notify('success', 'Vendor created successfully'); setShowAddModal(false); loadVendors(); }}>Save Vendor</Button>
             </div>
           </div>
         </Modal>

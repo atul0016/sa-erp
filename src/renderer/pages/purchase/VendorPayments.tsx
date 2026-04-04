@@ -195,11 +195,11 @@ const VendorPayments: React.FC = () => {
           <p className="text-gray-500">Manage payments to vendors with TDS compliance</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <button onClick={() => alert('Export coming soon')} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
             <Download className="h-4 w-4" />
             Export
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button onClick={() => alert('New Payment coming soon')} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="h-4 w-4" />
             New Payment
           </button>
@@ -419,7 +419,7 @@ const VendorPayments: React.FC = () => {
                       )}
                     </td>
                     <td className="py-3 px-4 text-center">
-                      <button className="p-1 text-gray-400 hover:text-blue-600">
+                      <button onClick={() => alert('Print coming soon')} className="p-1 text-gray-400 hover:text-blue-600">
                         <Printer className="h-4 w-4" />
                       </button>
                     </td>

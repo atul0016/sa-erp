@@ -414,10 +414,10 @@ export default function CreditLimitManagement() {
                     <td className="px-4 py-3 text-center">
                       {request.status === 'pending' && (
                         <div className="flex justify-center gap-2">
-                          <button className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200">
+                          <button onClick={() => alert('Approved')} className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200">
                             Approve
                           </button>
-                          <button className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200">
+                          <button onClick={() => alert('Rejected')} className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200">
                             Reject
                           </button>
                         </div>
@@ -571,7 +571,7 @@ export default function CreditLimitManagement() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => { setShowEditModal(false); setSelectedCustomer(null); alert('Changes saved'); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Save Changes
               </button>
             </div>

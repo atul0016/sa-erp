@@ -182,7 +182,7 @@ export default function StockLedger() {
         </div>
 
         <div className="flex gap-3">
-          <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+          <button onClick={() => alert('Export coming soon')} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
             <DocumentArrowDownIcon className="h-5 w-5" />
             Export
           </button>
@@ -449,7 +449,7 @@ export default function StockLedger() {
                       <span className="font-bold text-green-600">{formatCurrency(wh.stock_value)}</span>
                     </div>
                     <div className="pt-3 border-t">
-                      <button className="w-full px-4 py-2 bg-white border rounded-lg text-sm text-blue-600 hover:bg-blue-50">
+                      <button onClick={() => alert('View Detailed Stock coming soon')} className="w-full px-4 py-2 bg-white border rounded-lg text-sm text-blue-600 hover:bg-blue-50">
                         View Detailed Stock
                       </button>
                     </div>

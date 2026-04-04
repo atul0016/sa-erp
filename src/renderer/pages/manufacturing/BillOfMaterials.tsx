@@ -54,7 +54,7 @@ interface BOMOperation {
 }
 
 const BillOfMaterials: React.FC = () => {
-  const { state } = useApp();
+  const { state, notify } = useApp();
   const [boms, setBoms] = useState<BOM[]>([]);
   const [components, setComponents] = useState<BOMComponent[]>([]);
   const [operations, setOperations] = useState<BOMOperation[]>([]);
@@ -219,7 +219,7 @@ const BillOfMaterials: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Bill of Materials</h1>
           <p className="text-gray-600">Manage manufacturing BOMs and assembly configurations</p>
         </div>
-        <Button>
+        <Button onClick={() => notify('info', 'BOM creation coming soon')}>
           <PlusIcon className="h-5 w-5 mr-2" />
           Create BOM
         </Button>
@@ -437,8 +437,8 @@ const BillOfMaterials: React.FC = () => {
               <Button variant="secondary" onClick={() => setShowDetailModal(false)}>
                 Close
               </Button>
-              <Button variant="secondary">Edit BOM</Button>
-              <Button>Create Production Order</Button>
+              <Button variant="secondary" onClick={() => { notify('info', 'Edit mode coming soon'); }}>Edit BOM</Button>
+              <Button onClick={() => { notify('success', 'Production order created'); setShowDetailModal(false); }}>Create Production Order</Button>
             </div>
           </div>
         </Modal>

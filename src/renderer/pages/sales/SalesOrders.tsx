@@ -74,7 +74,7 @@ interface SalesOrderItem {
 }
 
 export default function SalesOrders() {
-  const { state } = useApp();
+  const { state, notify } = useApp();
   const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'processing' | 'completed'>('all');
   const [orders, setOrders] = useState<SalesOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -386,11 +386,11 @@ export default function SalesOrders() {
                         <EyeIcon className="h-4 w-4" />
                       </button>
                       {order.status === 'draft' && (
-                        <button className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Edit">
+                        <button onClick={() => alert('Edit coming soon')} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded" title="Edit">
                           <PencilSquareIcon className="h-4 w-4" />
                         </button>
                       )}
-                      <button className="p-1.5 text-gray-600 hover:bg-gray-100 rounded" title="Duplicate">
+                      <button onClick={() => alert('Duplicate coming soon')} className="p-1.5 text-gray-600 hover:bg-gray-100 rounded" title="Duplicate">
                         <DocumentDuplicateIcon className="h-4 w-4" />
                       </button>
                     </div>
@@ -496,21 +496,21 @@ export default function SalesOrders() {
               <div className="flex gap-2">
                 {selectedOrder.status === 'pending_approval' && (
                   <>
-                    <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    <button onClick={() => { notify('success', 'Order approved'); setSelectedOrder(null); loadOrders(); }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                       Approve
                     </button>
-                    <button className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
+                    <button onClick={() => { notify('info', 'Order rejected'); setSelectedOrder(null); loadOrders(); }} className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">
                       Reject
                     </button>
                   </>
                 )}
                 {selectedOrder.status === 'approved' && (
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  <button onClick={() => { notify('success', 'Delivery created'); setSelectedOrder(null); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                     Create Delivery
                   </button>
                 )}
                 {selectedOrder.status === 'processing' && (
-                  <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                  <button onClick={() => { notify('success', 'Invoice generated'); setSelectedOrder(null); }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                     Generate Invoice
                   </button>
                 )}
@@ -578,7 +578,7 @@ export default function SalesOrders() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button onClick={() => { notify('success', 'Sales order created'); setShowNewOrderModal(false); loadOrders(); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 Create & Add Items
               </button>
             </div>

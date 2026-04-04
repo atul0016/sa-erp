@@ -213,7 +213,7 @@ export default function POSTerminal() {
                 className="w-full pl-10 pr-4 py-3 border rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
-            <button className="px-4 py-2 bg-gray-100 border rounded-lg hover:bg-gray-200 flex items-center gap-2">
+            <button onClick={() => alert('Barcode scan coming soon')} className="px-4 py-2 bg-gray-100 border rounded-lg hover:bg-gray-200 flex items-center gap-2">
               <QrCodeIcon className="h-5 w-5" />
               Scan
             </button>
@@ -525,7 +525,7 @@ export default function POSTerminal() {
               >
                 Cancel
               </button>
-              <button className="flex-1 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2">
+              <button onClick={() => alert('New Customer coming soon')} className="flex-1 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2">
                 <PlusIcon className="h-5 w-5" />
                 New Customer
               </button>

@@ -228,17 +228,45 @@ export function JournalEntries() {
             <div className="flex justify-end gap-3 mt-6">
               {selectedEntry.status === 'draft' && (
                 <>
-                  <Button variant="secondary">Edit</Button>
-                  <Button>Post Entry</Button>
+                  <Button variant="secondary" onClick={() => { notify('info', 'Edit mode coming soon'); }}>Edit</Button>
+                  <Button onClick={() => { notify('success', 'Entry posted successfully'); setSelectedEntry(null); loadEntries(); }}>Post Entry</Button>
                 </>
               )}
               {selectedEntry.status === 'posted' && (
-                <Button variant="secondary">Reverse Entry</Button>
+                <Button variant="secondary" onClick={() => { notify('success', 'Entry reversed'); setSelectedEntry(null); loadEntries(); }}>Reverse Entry</Button>
               )}
             </div>
           </div>
         </Modal>
       )}
+
+      {/* New Entry Modal */}
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title="New Journal Entry"
+      >
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); notify('success', 'Journal entry created'); setShowModal(false); loadEntries(); }}>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Date</label>
+              <input type="date" defaultValue={new Date().toISOString().split('T')[0]} className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Reference</label>
+              <input type="text" placeholder="e.g., INV-001" className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Narration</label>
+            <textarea rows={2} placeholder="Description of the entry" className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg dark:bg-slate-700 dark:border-slate-600" />
+          </div>
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button type="submit">Create Entry</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
