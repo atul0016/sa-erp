@@ -177,7 +177,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await window.electronAPI?.auth?.logout?.();
+    } catch { /* ignore */ }
     dispatch({ type: 'LOGOUT' });
   };
 

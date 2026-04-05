@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { Notifications } from '../common/Notifications';
 import { ErrorBoundary } from '../common/ErrorBoundary';
 import { useApp } from '../../context';
+
+const HelpChatbot = lazy(() => import('../common/HelpChatbot'));
 
 export function MainLayout() {
   const { state, dispatch } = useApp();
@@ -52,6 +54,9 @@ export function MainLayout() {
         </main>
       </div>
       <Notifications />
+      <Suspense fallback={null}>
+        <HelpChatbot />
+      </Suspense>
     </div>
   );
 }
