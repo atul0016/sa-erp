@@ -7,6 +7,8 @@ import { ErrorBoundary } from '../common/ErrorBoundary';
 import { useApp } from '../../context';
 
 const HelpChatbot = lazy(() => import('../common/HelpChatbot'));
+const PageHelpGuide = lazy(() => import('../common/PageHelpGuide'));
+const OnboardingTour = lazy(() => import('../common/OnboardingTour'));
 
 export function MainLayout() {
   const { state, dispatch } = useApp();
@@ -55,7 +57,13 @@ export function MainLayout() {
       </div>
       <Notifications />
       <Suspense fallback={null}>
+        <PageHelpGuide />
+      </Suspense>
+      <Suspense fallback={null}>
         <HelpChatbot />
+      </Suspense>
+      <Suspense fallback={null}>
+        <OnboardingTour />
       </Suspense>
     </div>
   );

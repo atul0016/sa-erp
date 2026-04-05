@@ -6,7 +6,7 @@ Next-Generation On-Premise ERP System for Indian Manufacturing, Trading & Servic
 
 | | Link |
 |--|------|
-| **Live Web Demo** | https://nimble-capybara-f8ef90.netlify.app |
+| **Live Web Demo** | https://indian-erp.vercel.app |
 | **GitHub Repo** | https://github.com/atul0016/sa-erp |
 
 > Demo login: `admin` / `admin123`

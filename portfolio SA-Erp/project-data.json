@@ -1,0 +1,137 @@
+{
+  "name": "SA ERP",
+  "slug": "sa-erp",
+  "tagline": "Next-Generation On-Premise ERP System for Indian Manufacturing, Trading & Services",
+  "description": "A full-stack, production-grade Enterprise Resource Planning system with 10 integrated modules, 80+ database tables, and complete Indian tax compliance (GST, TDS, PF/ESI). Runs as both a web app and Electron desktop app from a single codebase.",
+  "category": "Full-Stack Application",
+  "type": "Enterprise Software",
+  "status": "Production Ready",
+  "year": "2025-2026",
+
+  "links": {
+    "live_demo": "https://indian-erp.vercel.app",
+    "github": "https://github.com/atul0016/sa-erp",
+    "demo_credentials": {
+      "username": "admin",
+      "password": "admin123"
+    }
+  },
+
+  "tech_stack": {
+    "frontend": ["React 18", "TypeScript 5.4", "Tailwind CSS 3.4", "HeadlessUI", "HeroIcons", "Lucide React", "Recharts"],
+    "backend": ["Electron 30", "Node.js", "SQLite (better-sqlite3)"],
+    "auth": ["Appwrite", "bcrypt", "JWT"],
+    "build_tools": ["Vite 5", "esbuild", "electron-builder"],
+    "libraries": ["Zod", "PDFKit", "ExcelJS", "date-fns", "lodash", "Firebase"],
+    "deployment": ["Vercel (web)", "Electron Builder (desktop)"]
+  },
+
+  "features": [
+    "10 integrated business modules (Finance, Inventory, Sales, Purchase, Manufacturing, HRM, GST, TDS, Reports, Settings)",
+    "59+ pages with 60+ routes",
+    "80+ database tables with referential integrity",
+    "MCA-compliant cryptographic audit trail (SHA-256 chained)",
+    "Complete GST compliance — E-Invoice (IRN), E-Way Bill, GSTR-1, GSTR-3B, GSTR-2B reconciliation",
+    "TDS management with Form 26Q generation",
+    "Double-entry accounting with Bank Reconciliation (fuzzy auto-matching)",
+    "Multi-warehouse inventory with FIFO, Weighted Avg, FEFO, Batch/Serial tracking",
+    "MRP with backward scheduling and multi-level BOM explosion",
+    "Touch-friendly Shop Floor Kiosk and OEE Dashboard",
+    "POS Terminal — offline-capable, barcode scanner, multi-payment (Cash/Card/UPI/Wallet)",
+    "Payroll processing with PF, ESIC, Professional Tax, TDS",
+    "16 pre-built report templates with PDF/Excel/CSV export",
+    "Role-based access control (RBAC) with multi-tenant support",
+    "Dual deployment — web app and desktop app from single codebase",
+    "Dark mode support, responsive design",
+    "Built-in Help Chatbot with knowledge base covering all modules"
+  ],
+
+  "modules": [
+    {
+      "name": "Finance & Accounting",
+      "highlights": ["Chart of Accounts", "Double-entry Journal Entries", "Bank Reconciliation", "Trial Balance", "P&L", "Balance Sheet"]
+    },
+    {
+      "name": "Inventory & Warehouse",
+      "highlights": ["Items Master with HSN/SAC", "Multi-warehouse", "Gate Pass (RGP/NRGP)", "Bin/Rack Management", "Wave Picking"]
+    },
+    {
+      "name": "Sales",
+      "highlights": ["Customer Master", "Sales Orders", "GST Invoices", "POS Terminal", "Credit Limit Control", "Aging Analysis"]
+    },
+    {
+      "name": "Purchase",
+      "highlights": ["Vendor Master", "Purchase Orders", "GRN", "Approval Workflow", "MSME Tracking"]
+    },
+    {
+      "name": "Manufacturing",
+      "highlights": ["Bill of Materials", "Production Orders", "MRP", "Shop Floor Kiosk", "OEE Dashboard", "Job Work (GST Sec 143)"]
+    },
+    {
+      "name": "HRM & Payroll",
+      "highlights": ["Employee Master", "Salary Structure", "Payroll Processing", "PF/ESI/TDS Deductions"]
+    },
+    {
+      "name": "GST Compliance",
+      "highlights": ["E-Invoice (IRN)", "E-Way Bill", "GSTR-1", "GSTR-3B", "GSTR-2B Reconciliation"]
+    },
+    {
+      "name": "TDS Management",
+      "highlights": ["Section 194C/J/Q", "Form 26Q", "Threshold Monitoring", "Challan Generation"]
+    },
+    {
+      "name": "Reports",
+      "highlights": ["16 Templates", "PDF/Excel/CSV Export", "Cross-module Reports"]
+    },
+    {
+      "name": "Settings",
+      "highlights": ["Company Profile", "User Management", "RBAC", "Multi-tenant"]
+    }
+  ],
+
+  "architecture": {
+    "pattern": "IPC-based client-server within Electron shell",
+    "frontend": "React SPA with 60+ routes and Context API state management",
+    "backend": "Electron Main Process with Repository Pattern, modular services",
+    "database": "SQLite with 80+ tables, multi-tenant isolation, SHA-256 audit chain",
+    "deployment": "Dual — Vercel (web) + Electron Builder (desktop)"
+  },
+
+  "compliance": [
+    "GST (CGST, SGST, IGST, Cess)",
+    "E-Invoice with IRN",
+    "E-Way Bill",
+    "TDS (Old & New Regime)",
+    "PF/ESI Statutory Deductions",
+    "Professional Tax",
+    "Form 16",
+    "Form 26Q",
+    "HSN/SAC Validation",
+    "GSTIN Validation",
+    "MCA Audit Trail (SHA-256)",
+    "ITC-04 (Job Work)"
+  ],
+
+  "metrics": {
+    "modules": 10,
+    "pages": "59+",
+    "database_tables": "80+",
+    "routes": "60+",
+    "ui_components": 12,
+    "report_templates": 16,
+    "type_definition_files": 8
+  },
+
+  "screenshots": [
+    { "file": "screenshots/01-dashboard.png", "caption": "Executive Dashboard with KPIs, revenue trends, and recent transactions" },
+    { "file": "screenshots/02-sales-invoice.png", "caption": "GST-compliant Sales Invoice with tax breakdown" },
+    { "file": "screenshots/03-pos-terminal.png", "caption": "Touch-optimized POS Terminal with multi-payment support" },
+    { "file": "screenshots/04-shop-floor-kiosk.png", "caption": "Shop Floor Kiosk for manufacturing operators" },
+    { "file": "screenshots/05-oee-dashboard.png", "caption": "OEE Dashboard with real-time performance metrics" },
+    { "file": "screenshots/06-gst-einvoice.png", "caption": "E-Invoice generation with IRN" },
+    { "file": "screenshots/07-payroll.png", "caption": "Payroll processing with PF/ESI/TDS deductions" },
+    { "file": "screenshots/08-bank-reconciliation.png", "caption": "Bank Reconciliation with fuzzy auto-matching" },
+    { "file": "screenshots/09-reports.png", "caption": "Financial Reports with export options" },
+    { "file": "screenshots/10-settings.png", "caption": "Settings and User Management" }
+  ]
+}

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChatBubbleLeftRightIcon, XMarkIcon, PaperAirplaneIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { useApp } from '../../context';
 
 interface Message {
   id: string;
@@ -279,10 +280,68 @@ const KB: Array<{ patterns: RegExp; answer: string }> = [
   },
 ];
 
-function getAnswer(question: string): string {
+// ─── Role → Module Access Map ───────────────────────────────────
+const ROLE_MODULES: Record<string, { name: string; modules: string[] }> = {
+  admin:              { name: 'Administrator',      modules: ['all'] },
+  ceo:                { name: 'CEO / Director',     modules: ['all'] },
+  finance_manager:    { name: 'Finance Manager',    modules: ['dashboard', 'finance', 'gst', 'reports', 'settings'] },
+  sales_manager:      { name: 'Sales Manager',      modules: ['dashboard', 'sales', 'reports', 'settings'] },
+  purchase_manager:   { name: 'Purchase Manager',   modules: ['dashboard', 'purchase', 'reports', 'settings'] },
+  inventory_manager:  { name: 'Inventory Manager',  modules: ['dashboard', 'inventory', 'reports'] },
+  production_manager: { name: 'Production Manager', modules: ['dashboard', 'manufacturing', 'reports'] },
+  hr_manager:         { name: 'HR Manager',         modules: ['dashboard', 'hrm', 'reports'] },
+  accountant:         { name: 'Accountant',         modules: ['dashboard', 'finance', 'gst', 'reports'] },
+  sales_executive:    { name: 'Sales Executive',    modules: ['dashboard', 'sales'] },
+  viewer:             { name: 'Viewer',             modules: ['dashboard', 'finance', 'inventory', 'sales', 'purchase', 'manufacturing', 'hrm', 'reports'] },
+};
+
+// Which module does a KB answer relate to?
+const ANSWER_MODULE_TAGS: Array<{ pattern: RegExp; module: string }> = [
+  { pattern: /finance|accounts|journal|ledger|trial.*balance|p.*l|balance.*sheet|bank.*recon|credit.*limit/i, module: 'finance' },
+  { pattern: /sales|customer|invoice.*sales|pos|receipt.*customer|aging/i, module: 'sales' },
+  { pattern: /purchase|vendor|po\b|grn|goods.*receipt|vendor.*payment/i, module: 'purchase' },
+  { pattern: /inventory|item|warehouse|stock|valuation|low.*stock|gate.*pass/i, module: 'inventory' },
+  { pattern: /manufactur|bom|production|mrp|job.*work|shop.*floor|oee|qc|quality|work.*center/i, module: 'manufacturing' },
+  { pattern: /hrm|employee|attendance|leave|payroll|tax.*declaration/i, module: 'hrm' },
+  { pattern: /gst|e.?invoice|e.?way|gstr|tds|itc|hsn/i, module: 'gst' },
+  { pattern: /report|analytics/i, module: 'reports' },
+  { pattern: /setting|config|company.*profile/i, module: 'settings' },
+];
+
+function detectModule(question: string, answer: string): string | null {
+  const combined = question + ' ' + answer;
+  for (const { pattern, module } of ANSWER_MODULE_TAGS) {
+    if (pattern.test(combined)) return module;
+  }
+  return null;
+}
+
+function canAccessModule(roles: string[], module: string | null): boolean {
+  if (!module) return true; // Generic answers are always accessible
+  for (const role of roles) {
+    const rm = ROLE_MODULES[role];
+    if (rm && (rm.modules.includes('all') || rm.modules.includes(module))) return true;
+  }
+  return false;
+}
+
+function getRoleName(roles: string[]): string {
+  for (const role of roles) {
+    if (ROLE_MODULES[role]) return ROLE_MODULES[role].name;
+  }
+  return 'User';
+}
+
+function getAnswer(question: string, roles: string[]): string {
   const q = question.trim();
   for (const entry of KB) {
     if (entry.patterns.test(q)) {
+      const module = detectModule(q, entry.answer);
+      if (!canAccessModule(roles, module)) {
+        const roleName = getRoleName(roles);
+        const moduleName = module ? module.charAt(0).toUpperCase() + module.slice(1) : 'this';
+        return `⚠️ **Not Available for Your Role**\n\nAs a **${roleName}**, you don't have access to the **${moduleName}** module. This action is not applicable to your role.\n\nContact your **Administrator** to request access, or ask me about features within your permitted modules.\n\n*Your accessible modules: ${roles.map(r => ROLE_MODULES[r]?.modules.join(', ') || 'limited').join('; ')}*`;
+      }
       return entry.answer;
     }
   }
@@ -390,12 +449,25 @@ function renderMarkdown(text: string): React.ReactNode {
 }
 
 export default function HelpChatbot() {
+  const { state } = useApp();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Parse user roles
+  const userRoles: string[] = (() => {
+    try {
+      const r = state.user?.roles;
+      if (Array.isArray(r)) return r;
+      if (typeof r === 'string') return JSON.parse(r);
+    } catch { /* ignore */ }
+    return ['viewer'];
+  })();
+  const roleName = getRoleName(userRoles);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'bot',
-      text: `👋 **Hi! I'm the SA ERP Help Assistant.**\n\nAsk me anything about the app — navigation, features, troubleshooting, or how-to guides.\n\nOr pick a question below to get started!`,
+      text: `👋 **Hi${state.user?.first_name ? ', ' + state.user.first_name : ''}! I'm the SA ERP Help Assistant.**\n\n🔐 You're logged in as **${roleName}**.\n\nAsk me anything about the app — navigation, features, troubleshooting, or how-to guides. I'll tailor answers to your role!\n\nOr pick a question below to get started!`,
     },
   ]);
   const [input, setInput] = useState('');
@@ -415,7 +487,7 @@ export default function HelpChatbot() {
     if (!q) return;
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', text: q };
-    const botMsg: Message = { id: (Date.now() + 1).toString(), role: 'bot', text: getAnswer(q) };
+    const botMsg: Message = { id: (Date.now() + 1).toString(), role: 'bot', text: getAnswer(q, userRoles) };
 
     setMessages(prev => [...prev, userMsg, botMsg]);
     setInput('');

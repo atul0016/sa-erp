@@ -1,0 +1,734 @@
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+interface HelpStep {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+interface PageHelp {
+  title: string;
+  subtitle: string;
+  steps: HelpStep[];
+  tips?: string[];
+}
+
+const PAGE_HELP: Record<string, PageHelp> = {
+  '/': {
+    title: 'Dashboard',
+    subtitle: 'Your business overview at a glance',
+    steps: [
+      { icon: '📊', title: 'View KPIs', desc: 'Top cards show revenue, invoices, inventory value & pending orders' },
+      { icon: '📈', title: 'Analyze Trends', desc: 'Charts display sales trends & expense breakdown over time' },
+      { icon: '⚡', title: 'Quick Actions', desc: 'Use shortcut buttons to jump to frequently used features' },
+      { icon: '🔔', title: 'Recent Activity', desc: 'See latest transactions & pending approvals at a glance' },
+    ],
+    tips: ['Dashboard updates automatically', 'Click any KPI card to drill down'],
+  },
+  '/approvals': {
+    title: 'Approval Queue',
+    subtitle: 'Review and approve pending requests',
+    steps: [
+      { icon: '📋', title: 'Review Pending', desc: 'All items awaiting your approval are listed here' },
+      { icon: '✅', title: 'Approve', desc: 'Click Approve to accept a request with optional comments' },
+      { icon: '❌', title: 'Reject', desc: 'Click Reject to decline with a reason' },
+      { icon: '🔍', title: 'View Details', desc: 'Click any item to see full details before deciding' },
+    ],
+  },
+  '/notifications': {
+    title: 'Notification Center',
+    subtitle: 'All your alerts and updates',
+    steps: [
+      { icon: '🔔', title: 'View Alerts', desc: 'See all notifications — approvals, stock alerts, status changes' },
+      { icon: '📌', title: 'Mark Read', desc: 'Click a notification to mark it as read' },
+      { icon: '🗑️', title: 'Clear All', desc: 'Use Clear All to dismiss all notifications at once' },
+    ],
+  },
+  // ── Finance ──
+  '/finance/accounts': {
+    title: 'Chart of Accounts',
+    subtitle: 'Manage your account structure',
+    steps: [
+      { icon: '📒', title: 'View Accounts', desc: 'Browse all accounts organized by type — Assets, Liabilities, Income, Expenses' },
+      { icon: '➕', title: 'Add Account', desc: 'Click "Add Account" → fill name, code, type, parent → Save' },
+      { icon: '✏️', title: 'Edit Account', desc: 'Click any account row to modify its details' },
+      { icon: '🔍', title: 'Search & Filter', desc: 'Use the search bar to quickly find any account by name or code' },
+    ],
+  },
+  '/finance/journal': {
+    title: 'Journal Entries',
+    subtitle: 'Create and manage accounting entries',
+    steps: [
+      { icon: '📝', title: 'New Entry', desc: 'Click "New Entry" to create a journal entry' },
+      { icon: '⚖️', title: 'Add Lines', desc: 'Add debit & credit lines — total must balance' },
+      { icon: '📮', title: 'Post Entry', desc: 'Click "Post Entry" to finalize and update the General Ledger' },
+      { icon: '↩️', title: 'Reverse', desc: 'Use "Reverse Entry" to create a correcting entry' },
+    ],
+    tips: ['Debits must equal Credits before posting'],
+  },
+  '/finance/ledger': {
+    title: 'General Ledger',
+    subtitle: 'View all transactions for any account',
+    steps: [
+      { icon: '📖', title: 'Select Account', desc: 'Choose an account from the dropdown to view its ledger' },
+      { icon: '📅', title: 'Set Date Range', desc: 'Filter transactions by date period' },
+      { icon: '📊', title: 'View Transactions', desc: 'See opening balance, each entry, and closing balance' },
+    ],
+  },
+  '/finance/trial-balance': {
+    title: 'Trial Balance',
+    subtitle: 'Verify that debits equal credits',
+    steps: [
+      { icon: '📋', title: 'View Balances', desc: 'All account balances shown with debit & credit columns' },
+      { icon: '📅', title: 'Select Period', desc: 'Choose the date to see balances at that point' },
+      { icon: '✅', title: 'Verify', desc: 'Total debits should equal total credits' },
+    ],
+  },
+  '/finance/pnl': {
+    title: 'Profit & Loss',
+    subtitle: 'Income statement for a period',
+    steps: [
+      { icon: '💰', title: 'Revenue', desc: 'Top section shows all income/revenue' },
+      { icon: '💸', title: 'Expenses', desc: 'Middle section lists all expense categories' },
+      { icon: '📈', title: 'Net Profit', desc: 'Bottom shows Gross → Operating → Net profit' },
+      { icon: '📅', title: 'Compare Periods', desc: 'Filter by date range to compare different periods' },
+    ],
+  },
+  '/finance/balance-sheet': {
+    title: 'Balance Sheet',
+    subtitle: 'Financial position at a point in time',
+    steps: [
+      { icon: '🏦', title: 'Assets', desc: 'View current and non-current assets' },
+      { icon: '📉', title: 'Liabilities', desc: 'View current and long-term liabilities' },
+      { icon: '💎', title: 'Equity', desc: "See owner's equity and retained earnings" },
+    ],
+  },
+  '/finance/bank-reconciliation': {
+    title: 'Bank Reconciliation',
+    subtitle: 'Match bank statement with your books',
+    steps: [
+      { icon: '📤', title: 'Import Statement', desc: 'Click "Import Statement" and upload CSV/XLSX file' },
+      { icon: '🔄', title: 'Auto-Match', desc: 'System matches bank entries with your ledger entries' },
+      { icon: '✅', title: 'Reconcile', desc: 'Review matches and click "Reconcile" to confirm' },
+      { icon: '⚠️', title: 'Review Unmatched', desc: 'Handle unmatched entries manually' },
+    ],
+  },
+  '/finance/credit-management': {
+    title: 'Credit Limit Management',
+    subtitle: 'Manage customer credit limits',
+    steps: [
+      { icon: '👁️', title: 'View Limits', desc: 'See all customers with their credit limits and utilization' },
+      { icon: '✅', title: 'Approve', desc: 'Approve credit limit change requests' },
+      { icon: '❌', title: 'Reject', desc: 'Reject requests that don\'t meet criteria' },
+      { icon: '✏️', title: 'Edit Limit', desc: 'Click "Edit" to manually adjust a customer\'s limit' },
+    ],
+  },
+  // ── Inventory ──
+  '/inventory/items': {
+    title: 'Items Master',
+    subtitle: 'Manage your product catalog',
+    steps: [
+      { icon: '📦', title: 'View Items', desc: 'Browse all products with SKU, price, stock info' },
+      { icon: '➕', title: 'Add Item', desc: 'Click "Add Item" → fill name, SKU, HSN, unit, price → Save' },
+      { icon: '✏️', title: 'Edit Item', desc: 'Click any item to update details' },
+      { icon: '🔍', title: 'Search', desc: 'Search by name, SKU, or HSN code' },
+    ],
+  },
+  '/inventory/warehouses': {
+    title: 'Warehouses',
+    subtitle: 'Manage storage locations',
+    steps: [
+      { icon: '🏭', title: 'View All', desc: 'See all warehouse locations with capacity info' },
+      { icon: '➕', title: 'Add Warehouse', desc: 'Click "Add Warehouse" → fill name, address, capacity → Save' },
+      { icon: '📊', title: 'Stock Summary', desc: 'Each warehouse shows total items and value stored' },
+    ],
+  },
+  '/inventory/stock-ledger': {
+    title: 'Stock Ledger',
+    subtitle: 'Track every item movement',
+    steps: [
+      { icon: '📖', title: 'Select Item', desc: 'Choose an item to view its complete movement history' },
+      { icon: '📅', title: 'Date Range', desc: 'Filter transactions by period' },
+      { icon: '📊', title: 'Movement Details', desc: 'See each in/out with opening & closing balance' },
+      { icon: '📤', title: 'Export', desc: 'Click Export to download as Excel/CSV' },
+    ],
+  },
+  '/inventory/moves': {
+    title: 'Stock Movements',
+    subtitle: 'Transfer and adjust stock',
+    steps: [
+      { icon: '🔄', title: 'Transfer', desc: 'Move stock between warehouses' },
+      { icon: '📝', title: 'Adjust', desc: 'Create adjustments for damaged or lost items' },
+      { icon: '📋', title: 'View History', desc: 'See all past movements with reasons' },
+    ],
+  },
+  '/inventory/valuation': {
+    title: 'Stock Valuation',
+    subtitle: 'Calculate total inventory value',
+    steps: [
+      { icon: '💰', title: 'View Valuation', desc: 'See item-wise and category-wise stock value' },
+      { icon: '🔍', title: 'Filter', desc: 'Use Filters to narrow by category, warehouse, etc.' },
+      { icon: '📤', title: 'Export', desc: 'Export to Excel for reporting and auditing' },
+    ],
+  },
+  '/inventory/low-stock': {
+    title: 'Low Stock Alerts',
+    subtitle: 'Items below reorder levels',
+    steps: [
+      { icon: '⚠️', title: 'Review Alerts', desc: 'Critical and warning items shown with stock levels' },
+      { icon: '✅', title: 'Select Items', desc: 'Check items you want to reorder' },
+      { icon: '🛒', title: 'Generate PO', desc: 'Click "Generate PO" to auto-create purchase orders' },
+      { icon: '📧', title: 'Notify', desc: 'Email suppliers about low stock via "Notify Suppliers"' },
+    ],
+  },
+  '/inventory/gate-pass': {
+    title: 'Gate Pass Management',
+    subtitle: 'Track material entry & exit',
+    steps: [
+      { icon: '📋', title: 'View Passes', desc: 'See all RGP (returnable) and NRGP (non-returnable) passes' },
+      { icon: '➕', title: 'Create Pass', desc: 'Click "New Gate Pass" → fill type, items, purpose → Create' },
+      { icon: '🖨️', title: 'Print', desc: 'Print gate pass for security checkpoint' },
+      { icon: '✅', title: 'Track Returns', desc: 'For RGP, track when items come back' },
+    ],
+  },
+  // ── Sales ──
+  '/sales/customers': {
+    title: 'Customers',
+    subtitle: 'Manage your customer database',
+    steps: [
+      { icon: '👥', title: 'View Customers', desc: 'Browse all customers with contact & balance info' },
+      { icon: '➕', title: 'Add Customer', desc: 'Click "Add Customer" → fill details, GSTIN → Save' },
+      { icon: '✏️', title: 'Edit/Delete', desc: 'Use action buttons on each row to modify' },
+      { icon: '🔍', title: 'Search', desc: 'Search by name, phone, GSTIN, or email' },
+    ],
+  },
+  '/sales/orders': {
+    title: 'Sales Orders',
+    subtitle: 'Create and manage sales orders',
+    steps: [
+      { icon: '➕', title: 'New Order', desc: 'Click "New Sales Order" → select customer, add items → Create' },
+      { icon: '✅', title: 'Approve', desc: 'Approve draft orders to proceed with fulfillment' },
+      { icon: '🚚', title: 'Create Delivery', desc: 'Generate delivery/dispatch from approved order' },
+      { icon: '🧾', title: 'Generate Invoice', desc: 'Create invoice directly from the order' },
+    ],
+    tips: ['Draft orders can be edited before approval'],
+  },
+  '/sales/invoices': {
+    title: 'Sales Invoices',
+    subtitle: 'Billing and invoice management',
+    steps: [
+      { icon: '➕', title: 'New Invoice', desc: 'Click "New Invoice" to create manually or from a Sales Order' },
+      { icon: '👁️', title: 'View', desc: 'Click the eye icon to see invoice details' },
+      { icon: '🖨️', title: 'Print', desc: 'Click the printer icon to print any invoice' },
+      { icon: '📊', title: 'Track Status', desc: 'Monitor paid, unpaid, and overdue invoices' },
+    ],
+  },
+  '/sales/pos': {
+    title: 'POS Terminal',
+    subtitle: 'Quick retail billing interface',
+    steps: [
+      { icon: '🔍', title: 'Search Products', desc: 'Type product name or scan barcode to add items' },
+      { icon: '🛒', title: 'Build Cart', desc: 'Adjust quantities, apply discounts to line items' },
+      { icon: '👤', title: 'Select Customer', desc: 'Choose existing customer or use walk-in' },
+      { icon: '💳', title: 'Complete Sale', desc: 'Click "Complete Transaction" to finish billing' },
+    ],
+    tips: ['Use keyboard shortcuts for faster billing'],
+  },
+  '/sales/receipts': {
+    title: 'Customer Receipts',
+    subtitle: 'Record customer payments',
+    steps: [
+      { icon: '➕', title: 'New Receipt', desc: 'Click "New Receipt" → select customer, enter amount → Create' },
+      { icon: '🔗', title: 'Link Invoices', desc: 'Receipts auto-link to outstanding invoices' },
+      { icon: '📊', title: 'Expand Details', desc: 'Click a row to see which invoices it was applied to' },
+      { icon: '🖨️', title: 'Print', desc: 'Click printer icon to print receipt voucher' },
+    ],
+  },
+  '/sales/aging': {
+    title: 'Aging Report',
+    subtitle: 'Track overdue receivables',
+    steps: [
+      { icon: '📊', title: 'View Buckets', desc: 'Outstanding amounts grouped by 0-30, 31-60, 61-90, 90+ days' },
+      { icon: '🔍', title: 'Filter', desc: 'Filter by customer, date range, or amount' },
+      { icon: '📞', title: 'Follow Up', desc: 'Identify overdue accounts for collection follow-up' },
+    ],
+  },
+  // ── Purchase ──
+  '/purchase/vendors': {
+    title: 'Vendors',
+    subtitle: 'Manage your suppliers',
+    steps: [
+      { icon: '🏪', title: 'View Vendors', desc: 'Browse all vendors with contact & payment details' },
+      { icon: '➕', title: 'Add Vendor', desc: 'Click "Add Vendor" → fill name, GSTIN, terms → Save' },
+      { icon: '✏️', title: 'Edit', desc: 'Click any vendor to update info' },
+    ],
+  },
+  '/purchase/orders': {
+    title: 'Purchase Orders',
+    subtitle: 'Create and track purchase orders',
+    steps: [
+      { icon: '➕', title: 'New PO', desc: 'Click "New Purchase Order" → select vendor, add items → Submit' },
+      { icon: '✅', title: 'Approve', desc: 'Approve PO to authorize procurement' },
+      { icon: '📦', title: 'Receive Goods', desc: 'Create GRN when goods arrive' },
+      { icon: '📊', title: 'Track Status', desc: 'Monitor: Draft → Submitted → Approved → Received' },
+    ],
+  },
+  '/purchase/grn': {
+    title: 'Goods Receipt Note',
+    subtitle: 'Record received goods',
+    steps: [
+      { icon: '📋', title: 'Select PO', desc: 'Choose the Purchase Order for incoming goods' },
+      { icon: '📝', title: 'Enter Qty', desc: 'Record received quantities (supports partial receipt)' },
+      { icon: '⚠️', title: 'Note Issues', desc: 'Flag quality issues or shortages' },
+      { icon: '💾', title: 'Save', desc: 'Save to automatically update inventory stock' },
+    ],
+  },
+  '/purchase/invoices': {
+    title: 'Purchase Invoices',
+    subtitle: 'Manage vendor invoices',
+    steps: [
+      { icon: '➕', title: 'New Invoice', desc: 'Click "New Purchase Invoice" → fill vendor, items → Create' },
+      { icon: '🔗', title: 'Link to PO', desc: 'Invoices can be linked to Purchase Orders and GRNs' },
+      { icon: '✅', title: 'Verify', desc: 'Match invoice amounts with PO and GRN' },
+      { icon: '💳', title: 'Pay', desc: 'Create payment from invoice via Vendor Payments' },
+    ],
+  },
+  '/purchase/payments': {
+    title: 'Vendor Payments',
+    subtitle: 'Pay your suppliers',
+    steps: [
+      { icon: '➕', title: 'New Payment', desc: 'Click "New Payment" → select vendor, enter amount → Create' },
+      { icon: '🔗', title: 'Link Invoices', desc: 'Payments auto-apply to outstanding invoices' },
+      { icon: '📊', title: 'View Details', desc: 'Expand row to see linked invoices' },
+      { icon: '🖨️', title: 'Print Voucher', desc: 'Print payment voucher for records' },
+    ],
+  },
+  // ── Manufacturing ──
+  '/manufacturing/bom': {
+    title: 'Bill of Materials',
+    subtitle: 'Define product recipes',
+    steps: [
+      { icon: '➕', title: 'Create BOM', desc: 'Click "Create BOM" → select product, add raw materials → Save' },
+      { icon: '📋', title: 'View BOMs', desc: 'Browse all product recipes with component lists' },
+      { icon: '🏭', title: 'Create Production', desc: 'Click "Create Production Order" directly from a BOM' },
+      { icon: '✏️', title: 'Edit BOM', desc: 'Modify components and quantities as needed' },
+    ],
+  },
+  '/manufacturing/work-centers': {
+    title: 'Work Centers',
+    subtitle: 'Manage production resources',
+    steps: [
+      { icon: '🏭', title: 'View Centers', desc: 'See all work centers with capacity & utilization' },
+      { icon: '➕', title: 'Add Center', desc: 'Click "Add Work Center" to create a new one' },
+      { icon: '📊', title: 'Analytics', desc: 'View performance and efficiency analytics' },
+      { icon: '🔧', title: 'Schedule', desc: 'Schedule maintenance for work centers' },
+    ],
+  },
+  '/manufacturing/production': {
+    title: 'Production Orders',
+    subtitle: 'Manage manufacturing orders',
+    steps: [
+      { icon: '➕', title: 'New Order', desc: 'Click "New Production Order" → select BOM, qty, dates → Submit' },
+      { icon: '▶️', title: 'Start', desc: 'Begin production and track progress' },
+      { icon: '📊', title: 'Track Status', desc: 'Monitor: Planned → In Progress → Completed' },
+      { icon: '✅', title: 'Complete', desc: 'Mark as complete to update finished goods inventory' },
+    ],
+  },
+  '/manufacturing/mrp': {
+    title: 'MRP Planning',
+    subtitle: 'Material Requirements Planning',
+    steps: [
+      { icon: '🔄', title: 'Run MRP', desc: 'Click "Run MRP" to analyze demand vs current stock' },
+      { icon: '📋', title: 'Review', desc: 'See recommended purchase orders and production orders' },
+      { icon: '🛒', title: 'Create POs', desc: 'Generate purchase orders for material shortfalls' },
+      { icon: '📅', title: 'Schedule', desc: 'Plan production considering lead times' },
+    ],
+  },
+  '/manufacturing/job-work': {
+    title: 'Job Work Challan',
+    subtitle: 'Outsourced manufacturing',
+    steps: [
+      { icon: '➕', title: 'Create Challan', desc: 'Click "New Challan" → add items to send to job worker' },
+      { icon: '🚛', title: 'Track Dispatch', desc: 'Monitor dispatched items and expected return dates' },
+      { icon: '📥', title: 'Record Return', desc: 'Click "Confirm Receipt" when items come back' },
+      { icon: '🧾', title: 'ITC-04', desc: 'Generate ITC-04 for GST compliance' },
+    ],
+  },
+  '/manufacturing/shop-floor': {
+    title: 'Shop Floor Kiosk',
+    subtitle: 'Real-time production tracking',
+    steps: [
+      { icon: '▶️', title: 'Start Job', desc: 'Click Start to begin tracking a production job' },
+      { icon: '⏸️', title: 'Pause/Resume', desc: 'Pause jobs during breaks, resume when ready' },
+      { icon: '📝', title: 'Record Output', desc: 'Enter produced quantities as work progresses' },
+      { icon: '⚠️', title: 'Log Downtime', desc: 'Record machine stoppages with reason codes' },
+    ],
+  },
+  '/manufacturing/oee': {
+    title: 'OEE Dashboard',
+    subtitle: 'Overall Equipment Effectiveness',
+    steps: [
+      { icon: '📊', title: 'View OEE', desc: 'See Availability × Performance × Quality = OEE %' },
+      { icon: '⏱️', title: 'Availability', desc: 'Actual run time vs planned production time' },
+      { icon: '⚡', title: 'Performance', desc: 'Actual output rate vs expected rate' },
+      { icon: '✅', title: 'Quality', desc: 'Good units vs total produced' },
+    ],
+  },
+  '/manufacturing/qc': {
+    title: 'QC Inspection',
+    subtitle: 'Quality control checks',
+    steps: [
+      { icon: '➕', title: 'New Inspection', desc: 'Create an inspection linked to a production order' },
+      { icon: '📝', title: 'Record Results', desc: 'Enter test parameters and pass/fail results' },
+      { icon: '📸', title: 'Capture', desc: 'Capture images of quality samples' },
+      { icon: '📄', title: 'Download Report', desc: 'Download the inspection report for records' },
+    ],
+  },
+  // ── HRM ──
+  '/hrm/employees': {
+    title: 'Employees',
+    subtitle: 'Manage your workforce',
+    steps: [
+      { icon: '➕', title: 'Add Employee', desc: 'Click "Add Employee" → fill details, department, salary → Save' },
+      { icon: '👥', title: 'View Directory', desc: 'Browse all employees with department & role info' },
+      { icon: '✏️', title: 'Edit', desc: 'Click any employee to update their profile' },
+      { icon: '🔍', title: 'Search', desc: 'Search by name, department, or employee ID' },
+    ],
+  },
+  '/hrm/attendance': {
+    title: 'Attendance',
+    subtitle: 'Track daily attendance',
+    steps: [
+      { icon: '📋', title: 'Mark Attendance', desc: 'Click "Mark Attendance" to record daily presence' },
+      { icon: '📤', title: 'Import Biometric', desc: 'Upload attendance data from biometric devices' },
+      { icon: '📅', title: 'View Calendar', desc: 'See monthly attendance calendar with status' },
+      { icon: '📊', title: 'Export', desc: 'Export attendance report for payroll processing' },
+    ],
+  },
+  '/hrm/leave': {
+    title: 'Leave Management',
+    subtitle: 'Handle leave requests',
+    steps: [
+      { icon: '📝', title: 'Apply Leave', desc: 'Submit leave application with type and dates' },
+      { icon: '✅', title: 'Approve/Reject', desc: 'Managers approve or reject pending requests' },
+      { icon: '📊', title: 'View Balance', desc: 'Check remaining leave balance by type' },
+      { icon: '📅', title: 'Calendar', desc: 'View team leave calendar to plan coverage' },
+    ],
+  },
+  '/hrm/payroll': {
+    title: 'Payroll',
+    subtitle: 'Process salaries',
+    steps: [
+      { icon: '▶️', title: 'Run Payroll', desc: 'Process monthly payroll for all or selected employees' },
+      { icon: '📊', title: 'Review', desc: 'Check calculations — basic, allowances, deductions (PF, ESI, TDS)' },
+      { icon: '📄', title: 'Pay Slips', desc: 'Generate and distribute pay slips' },
+      { icon: '💳', title: 'Pay', desc: 'Mark as paid after bank transfer' },
+    ],
+  },
+  '/hrm/tax': {
+    title: 'Tax Declarations',
+    subtitle: 'Employee investment declarations',
+    steps: [
+      { icon: '📝', title: 'Declare', desc: 'Employees submit investment declarations (80C, 80D, HRA, etc.)' },
+      { icon: '📤', title: 'Upload Proofs', desc: 'Upload documentary proof for each declaration' },
+      { icon: '✅', title: 'HR Review', desc: 'HR reviews and approves declarations' },
+      { icon: '📊', title: 'Tax Calc', desc: 'Auto-calculates tax liability for payroll TDS' },
+    ],
+  },
+  // ── GST ──
+  '/gst/e-invoice': {
+    title: 'E-Invoice',
+    subtitle: 'Generate IRN for B2B invoices',
+    steps: [
+      { icon: '🧾', title: 'Select Invoices', desc: 'Choose invoices for E-Invoice generation' },
+      { icon: '🔄', title: 'Generate IRN', desc: 'Submit to NIC portal to get Invoice Reference Number' },
+      { icon: '📱', title: 'QR Code', desc: 'QR code auto-generated with IRN' },
+      { icon: '❌', title: 'Cancel', desc: 'Cancel within 24 hours if needed' },
+    ],
+  },
+  '/gst/e-way-bill': {
+    title: 'E-Way Bill',
+    subtitle: 'Manage goods transport documents',
+    steps: [
+      { icon: '➕', title: 'Generate', desc: 'Click "Generate E-Way Bill" → fill transport details → Submit' },
+      { icon: '⏰', title: 'Extend Validity', desc: 'Extend if transport is delayed beyond validity period' },
+      { icon: '🚛', title: 'Update Vehicle', desc: 'Change vehicle number if transport changes' },
+      { icon: '🖨️', title: 'Print', desc: 'Print E-Way Bill for the transporter' },
+    ],
+  },
+  '/gst/gstr1': {
+    title: 'GSTR-1',
+    subtitle: 'Outward supply return',
+    steps: [
+      { icon: '📋', title: 'Review Data', desc: 'Auto-populated from your sales invoices' },
+      { icon: '🔍', title: 'Validate', desc: 'Check B2B, B2C, Credit Notes, and Export sections' },
+      { icon: '📥', title: 'Download JSON', desc: 'Download for upload to GST portal' },
+    ],
+  },
+  '/gst/gstr2b': {
+    title: 'GSTR-2B Reconciliation',
+    subtitle: 'Match purchases with GSTR-2B',
+    steps: [
+      { icon: '📤', title: 'Upload JSON', desc: 'Upload GSTR-2B data from GST portal' },
+      { icon: '🔄', title: 'Auto-Match', desc: 'System matches with your purchase records' },
+      { icon: '🔍', title: 'Review', desc: 'Check matched, mismatched, and missing entries' },
+      { icon: '📤', title: 'Export', desc: 'Export reconciliation report' },
+    ],
+  },
+  '/gst/tds': {
+    title: 'TDS Management',
+    subtitle: 'Tax Deducted at Source',
+    steps: [
+      { icon: '📋', title: 'View TDS', desc: 'See all TDS deductions by section (194C, 194J, etc.)' },
+      { icon: '💳', title: 'Track Deposits', desc: 'Monitor TDS deposit status with government' },
+      { icon: '📄', title: 'Form 26Q', desc: 'Click "Generate Form 26Q" for quarterly filing' },
+    ],
+  },
+  '/gst/itc': {
+    title: 'ITC Reconciliation',
+    subtitle: 'Input Tax Credit reconciliation',
+    steps: [
+      { icon: '📤', title: 'Import GSTR-2A', desc: 'Upload GSTR-2A data from the portal' },
+      { icon: '🔄', title: 'Run Recon', desc: 'Click "Run Reconciliation" to compare claimed vs available ITC' },
+      { icon: '🔍', title: 'Review', desc: 'Check matched, excess, and unavailable ITC' },
+      { icon: '📤', title: 'Export', desc: 'Export report for audit trail' },
+    ],
+  },
+  '/gst/hsn': {
+    title: 'HSN Summary',
+    subtitle: 'HSN/SAC-wise summary for GSTR-1',
+    steps: [
+      { icon: '📊', title: 'View Summary', desc: 'See taxable value, CGST, SGST, IGST per HSN code' },
+      { icon: '📈', title: 'Analytics', desc: 'View top HSN codes by value and quantity' },
+      { icon: '📥', title: 'Download', desc: 'Download in GSTR-1 format for portal upload' },
+    ],
+  },
+  // ── Reports ──
+  '/reports/financial': {
+    title: 'Financial Reports',
+    subtitle: 'P&L, Balance Sheet, Cash Flow',
+    steps: [
+      { icon: '📅', title: 'Select Period', desc: 'Choose date range for the report' },
+      { icon: '📊', title: 'View Report', desc: 'See formatted financial statements' },
+      { icon: '📤', title: 'Export', desc: 'Export to PDF or Excel' },
+    ],
+  },
+  '/reports/sales': {
+    title: 'Sales Reports',
+    subtitle: 'Revenue and sales analysis',
+    steps: [
+      { icon: '📊', title: 'View Trends', desc: 'See revenue trends, top customers, product analysis' },
+      { icon: '🔍', title: 'Filter', desc: 'Apply date range and category filters' },
+      { icon: '📤', title: 'Export', desc: 'Export to PDF or Excel for sharing' },
+    ],
+  },
+  '/reports/purchase': {
+    title: 'Purchase Reports',
+    subtitle: 'Procurement analytics',
+    steps: [
+      { icon: '📊', title: 'View Analysis', desc: 'Vendor performance, cost trends, PO tracking' },
+      { icon: '🔍', title: 'Filter', desc: 'Apply date range and vendor filters' },
+      { icon: '📤', title: 'Export', desc: 'Export to PDF or Excel' },
+    ],
+  },
+  '/reports/inventory': {
+    title: 'Inventory Reports',
+    subtitle: 'Stock and movement analysis',
+    steps: [
+      { icon: '📊', title: 'Stock Status', desc: 'View current stock levels across warehouses' },
+      { icon: '🔄', title: 'Movement Analysis', desc: 'Track inward/outward trends' },
+      { icon: '📤', title: 'Export', desc: 'Export to PDF or Excel' },
+    ],
+  },
+  '/reports/gst': {
+    title: 'GST Reports',
+    subtitle: 'Tax compliance reports',
+    steps: [
+      { icon: '📊', title: 'GSTR Summary', desc: 'View GSTR-1, GSTR-3B, and other return summaries' },
+      { icon: '📥', title: 'Download', desc: 'Download GSTR-3B for filing' },
+      { icon: '📤', title: 'Export', desc: 'Export to Excel for analysis' },
+    ],
+  },
+  // ── Settings ──
+  '/settings': {
+    title: 'Settings',
+    subtitle: 'Configure your ERP system',
+    steps: [
+      { icon: '🏢', title: 'Company Profile', desc: 'Set company name, GSTIN, address, logo' },
+      { icon: '👥', title: 'Users', desc: 'Create and manage user accounts' },
+      { icon: '🔐', title: 'Roles', desc: 'Define role permissions for each user type' },
+      { icon: '📝', title: 'Master Data', desc: 'Manage UOM, tax rates, payment terms' },
+    ],
+    tips: ['Only Admin users can modify settings'],
+  },
+};
+
+// Alias routes to canonical paths
+const ROUTE_ALIASES: Record<string, string> = {
+  '/finance': '/finance/accounts',
+  '/inventory': '/inventory/items',
+  '/sales': '/sales/invoices',
+  '/purchase': '/purchase/orders',
+  '/manufacturing': '/manufacturing/production',
+  '/hrm': '/hrm/employees',
+  '/gst': '/gst/e-invoice',
+  '/reports': '/reports/financial',
+  '/settings/company': '/settings',
+  '/settings/users': '/settings',
+  '/settings/roles': '/settings',
+  '/settings/master': '/settings',
+};
+
+export default function PageHelpGuide() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const location = useLocation();
+
+  const route = location.pathname;
+  const canonicalRoute = ROUTE_ALIASES[route] || route;
+  const help = PAGE_HELP[canonicalRoute];
+
+  // Reset when page changes
+  useEffect(() => {
+    setIsOpen(false);
+    setActiveStep(0);
+  }, [route]);
+
+  // Auto-advance animation
+  useEffect(() => {
+    if (!isOpen || !help) return;
+    setAnimating(true);
+    const t = setTimeout(() => setAnimating(false), 400);
+    return () => clearTimeout(t);
+  }, [activeStep, isOpen]);
+
+  if (!help) return null;
+
+  const nextStep = () => setActiveStep(s => Math.min(s + 1, help.steps.length - 1));
+  const prevStep = () => setActiveStep(s => Math.max(s - 1, 0));
+
+  return (
+    <>
+      {/* "?" Button — fixed bottom-left, away from page action buttons and chatbot */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-4 left-4 z-[9998] w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-200 flex items-center justify-center text-sm font-bold lg:left-[17rem]"
+        title="Page Help Guide"
+      >
+        ?
+      </button>
+
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-[2px] flex items-start justify-center pt-20 sm:pt-24"
+          onClick={() => setIsOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-[360px] max-w-[92vw] overflow-hidden"
+            onClick={e => e.stopPropagation()}
+            style={{ animation: 'helpSlideIn 0.35s cubic-bezier(0.34,1.56,0.64,1)' }}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-4 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-bold text-lg leading-tight">{help.title}</h3>
+                  <p className="text-indigo-200 text-xs mt-0.5">{help.subtitle}</p>
+                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              {/* Step indicators */}
+              <div className="flex gap-1.5 mt-3">
+                {help.steps.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveStep(i)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i === activeStep ? 'bg-white w-6' : 'bg-white/40 w-3 hover:bg-white/60'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Step Content */}
+            <div className="px-5 py-5">
+              <div
+                className={`transition-all duration-300 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}
+              >
+                <div className="flex items-start gap-3 mb-4">
+                  <span className="text-3xl flex-shrink-0 mt-0.5" role="img">{help.steps[activeStep].icon}</span>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 text-[15px]">{help.steps[activeStep].title}</h4>
+                    <p className="text-gray-600 text-sm mt-1 leading-relaxed">{help.steps[activeStep].desc}</p>
+                  </div>
+                </div>
+
+                {/* Step counter */}
+                <p className="text-xs text-gray-400 text-center">
+                  Step {activeStep + 1} of {help.steps.length}
+                </p>
+              </div>
+
+              {/* Navigation */}
+              <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                <button
+                  onClick={prevStep}
+                  disabled={activeStep === 0}
+                  className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  ← Prev
+                </button>
+                {activeStep === help.steps.length - 1 ? (
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-1.5 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    Got it ✓
+                  </button>
+                ) : (
+                  <button
+                    onClick={nextStep}
+                    className="px-3 py-1.5 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors font-medium"
+                  >
+                    Next →
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Tips (if any) */}
+            {help.tips && (
+              <div className="px-5 pb-4">
+                <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5">
+                  <p className="text-xs font-semibold text-amber-700 mb-1">💡 Tips</p>
+                  {help.tips.map((tip, i) => (
+                    <p key={i} className="text-xs text-amber-600">• {tip}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Keyframe animation */}
+      <style>{`
+        @keyframes helpSlideIn {
+          from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+      `}</style>
+    </>
+  );
+}
